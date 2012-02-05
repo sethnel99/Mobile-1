@@ -14,7 +14,7 @@ import android.widget.ListView;
 public class NomadActivity extends ListActivity{
 	ListView mListView;
 	EditText searchBar;
-	CustomListAdapter mListAdapter;
+	FoodTruckListAdapter mListAdapter;
 	
     /** Called when the activity is first created. */
     @Override
@@ -25,19 +25,9 @@ public class NomadActivity extends ListActivity{
         mListView = this.getListView();
         searchBar = (EditText)findViewById(R.id.searchEditText);
         
-      
-        int rID = R.layout.truckrow;
-        int[] viewIDs = {R.id.distanceText, R.id.nameText, R.id.locationText};
-        int[] viewTypes = {CustomListAdapter.TEXTVIEW,CustomListAdapter.TEXTVIEW,CustomListAdapter.TEXTVIEW};
-      
-        ArrayList<String[]> items = fillFakeTrucks();
-        String[] searchStrings = new String[items.size()];
-        for(int i = 0; i < searchStrings.length; i++){
-        	searchStrings[i] = items.get(i)[1];
-        }
+        ArrayList<FoodTruck> trucks = fillFakeTrucks();
         
-        
-        mListAdapter = new CustomListAdapter(getApplicationContext(),rID,viewIDs, viewTypes, items, searchStrings, 0);
+        mListAdapter = new FoodTruckListAdapter(getApplicationContext(), trucks, FoodTruckListAdapter.TRUCKLIST);
         setListAdapter(mListAdapter);
         mListView.setTextFilterEnabled(true);
         searchBar.addTextChangedListener(new TextWatcher(){
@@ -56,69 +46,20 @@ public class NomadActivity extends ListActivity{
         
     }
     
-    public  ArrayList<String[]> fillFakeTrucks(){
-    	ArrayList<String[]> toRet = new ArrayList<String[]>();
+    public  ArrayList<FoodTruck> fillFakeTrucks(){
+    	ArrayList<FoodTruck> toRet = new ArrayList<FoodTruck>();
     	
-       	String[] item = new String[3];
-       	
-    	item[0] = "0.1";
-    	item[1] = "5411 Empanadas";
-    	item[2] = "W. Jackson & Wells";
-    	toRet.add(item);
-    	
-    	item = new String[3];
-    	item[0] = "0.2";
-    	item[1] = "Hummingbird Kitchen";
-    	item[2] = "W. Jackson & Wells";
-    	toRet.add(item);
-    	
-    	item = new String[3];
-    	item[0] = "0.3";
-    	item[1] = "Flirty Cupcakes";
-    	item[2] = "W. Jackson & Wells";
-    	toRet.add(item);
-    	
-    	item = new String[3];
-    	item[0] = "0.4";
-    	item[1] = "More Mobile";
-    	item[2] = "W. Jackson & Wells";  
-    	toRet.add(item);
-    	
-    	item = new String[3];
-    	item[0] = "0.5";
-    	item[1] = "Gaztro-Wagon";
-    	item[2] = "W. Jackson & Wells";
-    	toRet.add(item);
-    	
-    	item = new String[3];
-    	item[0] = "0.6";
-    	item[1] = "Meatyballs Mobile";
-    	item[2] = "W. Jackson & Wells"; 
-    	toRet.add(item);
-    	
-    	item = new String[3];
-      	item[0] = "1.0";
-    	item[1] = "Simple Sandwich";
-    	item[2] = "W. Jackson & Wells";   
-    	toRet.add(item);
-    	
-    	item = new String[3];
-      	item[0] = "0.9";
-    	item[1] = "Happy Bodgea";
-    	item[2] = "W. Jackson & Wells";
-    	toRet.add(item);
-    	
-    	item = new String[3];
-      	item[0] = "0.8";
-    	item[1] = "Beavers Donuts";
-    	item[2] = "W. Jackson & Wells";
-    	toRet.add(item);
-    	
-    	item = new String[3];
-      	item[0] = "0.7";
-    	item[1] = "Brown Bag";
-    	item[2] = "W. Jackson & Wells";
-    	toRet.add(item);
+    	toRet.add(new FoodTruck("5411 Empanadas","W. Jackson & Wells", "5411 Empanadas"));
+    	toRet.add(new FoodTruck("Flirty Cupcakes","W. Jackson & Wells", "Flirty Cupcakes"));
+    	toRet.add(new FoodTruck("More Mobile","W. Jackson & Wells", "More Mobile"));
+    	toRet.add(new FoodTruck("Gaztro-Wagon","W. Jackson & Wells", "Gaztro-Wagon"));
+    	toRet.add(new FoodTruck("Meatyballs Mobile","W. Jackson & Wells", "Meatyballs Mobile"));
+    	toRet.add(new FoodTruck("Simple Sandwich","W. Jackson & Wells", "Simple Sandwich"));
+    	toRet.add(new FoodTruck("Happy Bodega","W. Jackson & Wells", "Happy Bodega"));
+    	toRet.add(new FoodTruck("Beavers Donuts","W. Jackson & Wells", "Beavers Donuts"));
+    	toRet.add(new FoodTruck("Brown Bag","W. Jackson & Wells", "Brown Bag"));
+    	toRet.add(new FoodTruck("Hummingbird Kitchen","W. Jackson & Wells", "Hummingbird Kitchen"));
+
     	
     	return toRet;
     	
