@@ -14,6 +14,7 @@ import android.widget.Filter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+//test comment 2222
 public class CustomListAdapter extends BaseAdapter{
 	public static int TEXTVIEW = 0;
 	public static int IMAGEVIEW = 1;
