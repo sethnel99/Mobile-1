@@ -11,20 +11,23 @@ public final class R {
     public static final class attr {
     }
     public static final class color {
+        public static final int grey=0x7f040001;
         public static final int navy=0x7f040000;
     }
     public static final class drawable {
         public static final int arrow=0x7f020000;
         public static final int backbtn=0x7f020001;
-        public static final int bluetruck=0x7f020002;
-        public static final int ducknroll=0x7f020003;
-        public static final int empanadapic=0x7f020004;
-        public static final int header_bg=0x7f020005;
-        public static final int ic_launcher=0x7f020006;
-        public static final int listbtn=0x7f020007;
-        public static final int mapbtn=0x7f020008;
-        public static final int templogo=0x7f020009;
-        public static final int truckpin=0x7f02000a;
+        public static final int backgroundrepeat=0x7f020002;
+        public static final int backgroundtile=0x7f020003;
+        public static final int bluetruck=0x7f020004;
+        public static final int ducknroll=0x7f020005;
+        public static final int empanadapic=0x7f020006;
+        public static final int header_bg=0x7f020007;
+        public static final int ic_launcher=0x7f020008;
+        public static final int listbtn=0x7f020009;
+        public static final int mapbtn=0x7f02000a;
+        public static final int templogo=0x7f02000b;
+        public static final int truckpin=0x7f02000c;
     }
     public static final class id {
         public static final int backButton=0x7f060006;

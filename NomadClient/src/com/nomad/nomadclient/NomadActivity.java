@@ -27,7 +27,8 @@ public class NomadActivity extends ListActivity{
         
         ArrayList<FoodTruck> trucks = fillFakeTrucks();
         
-        mListAdapter = new FoodTruckListAdapter(getApplicationContext(), trucks, FoodTruckListAdapter.TRUCKLIST);
+        mListAdapter = new FoodTruckListAdapter(getApplicationContext(), trucks);
+        
         setListAdapter(mListAdapter);
         mListView.setTextFilterEnabled(true);
         searchBar.addTextChangedListener(new TextWatcher(){

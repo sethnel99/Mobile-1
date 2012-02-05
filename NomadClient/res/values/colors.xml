@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="navy">#000022</color>
+    <color name="navy">#001935</color>
+    <color name="grey">#C0C0C0</color>
     
 </resources>

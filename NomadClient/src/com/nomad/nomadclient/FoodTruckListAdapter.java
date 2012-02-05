@@ -6,14 +6,11 @@ import android.content.Context;
 import android.util.Log;
 
 public class FoodTruckListAdapter extends CustomListAdapter{
-	public static int TRUCKLIST = 0;
+	public static int MENU = 0;
+	public static int MESSAGES = 1;
 	
-	
-	private int type;
-	
-	public FoodTruckListAdapter(Context c, ArrayList<FoodTruck> a, int t){
+	public FoodTruckListAdapter(Context c, ArrayList<FoodTruck> a){
 		super(c);
-		type = t;
 		int rowID = R.layout.truckrow;
 		int[] viewIDs = {R.id.distanceText, R.id.nameText, R.id.locationText};
 		int[] viewTypes = {TEXTVIEW, TEXTVIEW, TEXTVIEW };
@@ -37,6 +34,34 @@ public class FoodTruckListAdapter extends CustomListAdapter{
 		
 		super.initAdapter(rowID, viewIDs, viewTypes, items, searchFields, sortField);	
 	}
+	
+	public FoodTruckListAdapter(Context c, FoodTruck ft, int type){
+		super(c);
+		
+		if(type == MENU){
+			ArrayList<String[]> items = new ArrayList<String[]>();
+			
+			int rowID = R.layout.menurow;
+			int[] viewIDs = {R.id.foodPic, R.id.menuItemText};
+			int[] viewTypes = {IMAGEVIEW, TEXTVIEW};
+			
+			String[] temp;
+			MenuFoodItem tempmfi;
+			ArrayList<MenuFoodItem> menu = ft.menu;
+			
+			for(int i = 0; i < menu.size(); i++){
+				temp = new String[3];
+				tempmfi = menu.get(i);
+				temp[0] = String.valueOf(tempmfi.drawableID);
+				temp[1] = tempmfi.name;
+				items.add(temp);
+			}
+			
+			super.initAdapter(rowID, viewIDs, viewTypes, items);
+			
+		}
+	}
+	
 	
 
 }

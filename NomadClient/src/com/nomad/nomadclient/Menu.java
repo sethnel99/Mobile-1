@@ -4,11 +4,8 @@ import java.util.ArrayList;
 
 import android.app.ListActivity;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ListView;
 
 public class Menu extends ListActivity{
@@ -31,21 +28,16 @@ public class Menu extends ListActivity{
        
         mListView = this.getListView();
       
-        int rID = R.layout.menurow;
-        int[] viewIDs = {R.id.foodPic,R.id.menuItemText};
-        int[] viewTypes = {CustomListAdapter.IMAGEVIEW,CustomListAdapter.TEXTVIEW};
-      
-        ArrayList<String[]> items = new ArrayList<String[]>();
-        String[] item;
+        ArrayList<MenuFoodItem> menu = new ArrayList<MenuFoodItem>();
         for(int i = 0; i < 15; i++){
-        	item = new String[2];
-        	item[0]= String.valueOf(R.drawable.empanadapic);
-        	item[1]= "Chicken Empanada";
-        	items.add(item);
+        	menu.add(new MenuFoodItem("Chicken Empanadas",R.drawable.empanadapic,9.99));
         }
         
+        FoodTruck temp = new FoodTruck("5411 Empanadas","W. Jackson and Wells","5411 Empanadas");
+        temp.addMenu(menu);
         
-        mListAdapter = new CustomListAdapter(getApplicationContext(),rID,viewIDs, viewTypes, items);
+        
+        mListAdapter = new FoodTruckListAdapter(getApplicationContext(),temp,FoodTruckListAdapter.MENU);
         setListAdapter(mListAdapter);
         mListView.setTextFilterEnabled(true);
        
