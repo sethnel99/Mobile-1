@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:paddingTop = "5dp" 
+    android:paddingBottom = "5dp" >
+    
+    <TextView 
+        	android:id="@+id/distanceText"
+            android:layout_width="70dp"
+   			android:layout_height="70dp"
+   			android:text="0.1"
+   			android:textSize="50dp"
+   			android:layout_alignParentLeft="true"
+   			android:layout_marginRight="15dp"
+   			android:textColor = "@color/navy"
+   			android:textStyle="bold"
+        />
+    
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:orientation="vertical" 
+    android:layout_toRightOf="@+id/distanceText"
+    android:layout_centerVertical="true">
+    
+         <TextView 
+        	android:id="@+id/nameText"
+            android:layout_width="wrap_content"
+   			android:layout_height="wrap_content"
+   			android:text="5411 Empanadas"
+   			android:textSize="18dp"
+   			android:textColor = "@color/navy"
+       	 />
+    
+            
+       <TextView 
+        	android:id="@+id/locationText"
+            android:layout_width="wrap_content"
+   			android:layout_height="wrap_content"
+   			android:text="W. Jackson &amp; Wells"
+   			android:textSize="12dp"
+   			android:textColor = "@color/navy"
+        />
+      
+      
+    </LinearLayout>
+    
+    <ImageView android:id="@+id/rightArrow"
+		android:layout_width="60dp" android:layout_height="60dp" android:src="@drawable/arrow"
+		android:layout_alignParentRight="true"
+		android:layout_marginRight="5dp"
+		android:padding = "10dp"
+		android:layout_centerVertical="true"
+		/>
+
+</RelativeLayout>

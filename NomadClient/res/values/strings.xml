@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Nomad</string>
+    <string name="latestmessage"><b>LATEST MESSAGE</b></string>
+    <string name="map"><b>MAP</b></string>
+     <string name="menu"><b>MENU</b></string>
+    <string name="schedule"><b>SCHEDULE</b></string>
+
+</resources>
