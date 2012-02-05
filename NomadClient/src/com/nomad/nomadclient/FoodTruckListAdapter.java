@@ -9,6 +9,7 @@ public class FoodTruckListAdapter extends CustomListAdapter{
 	public static int MENU = 0;
 	public static int MESSAGES = 1;
 	
+	//passing in an entire list of trucks, will create an adapter for the truck list
 	public FoodTruckListAdapter(Context c, ArrayList<FoodTruck> a){
 		super(c);
 		int rowID = R.layout.truckrow;
@@ -35,6 +36,7 @@ public class FoodTruckListAdapter extends CustomListAdapter{
 		super.initAdapter(rowID, viewIDs, viewTypes, items, searchFields, sortField);	
 	}
 	
+	//passing in a single truck, will create an adapter for information in that single truck based on type 
 	public FoodTruckListAdapter(Context c, FoodTruck ft, int type){
 		super(c);
 		
