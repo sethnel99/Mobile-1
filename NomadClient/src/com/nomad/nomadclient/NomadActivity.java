@@ -2,12 +2,14 @@ package com.nomad.nomadclient;
 
 import java.util.ArrayList;
 
+import android.app.Activity;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
@@ -15,6 +17,7 @@ public class NomadActivity extends ListActivity{
 	ListView mListView;
 	EditText searchBar;
 	FoodTruckListAdapter mListAdapter;
+	Activity thisClass = this;
 	
     /** Called when the activity is first created. */
     @Override
@@ -38,6 +41,16 @@ public class NomadActivity extends ListActivity{
             	mListAdapter.getFilter().filter(s);
             }
         }); 
+        
+        Button mapButton = (Button)findViewById(R.id.mapButton);
+        mapButton.setOnClickListener(new View.OnClickListener(){
+			public void onClick(View v) {
+				Intent i = new Intent(thisClass, TruckMap.class);   
+				i.putExtra("fromPage", TruckMap.FROM_LIST);
+				startActivity(i); 
+			}
+		});
+		
 
         
        

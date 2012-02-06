@@ -34,7 +34,7 @@ public final class R {
         public static final int truckpin=0x7f020010;
     }
     public static final class id {
-        public static final int backButton=0x7f04000b;
+        public static final int backButton=0x7f040008;
         public static final int balloon_close=0x7f040001;
         public static final int balloon_inner_layout=0x7f040000;
         public static final int balloon_item_snippet=0x7f040004;
@@ -48,13 +48,13 @@ public final class R {
         public static final int latestMessagePromptText=0x7f040018;
         public static final int latestMessageText=0x7f040019;
         public static final int latestMessageView=0x7f040017;
-        public static final int listButton=0x7f04000a;
+        public static final int listButton=0x7f04000b;
         public static final int locationText=0x7f040023;
-        public static final int logo=0x7f040008;
+        public static final int logo=0x7f040009;
         public static final int mapButton=0x7f040012;
         public static final int mapButtonText=0x7f04001b;
         public static final int mapButtonView=0x7f04001a;
-        public static final int mapview=0x7f040009;
+        public static final int mapview=0x7f04000a;
         public static final int menuButtonText=0x7f04001e;
         public static final int menuButtonView=0x7f04001d;
         public static final int menuItemText=0x7f04000f;
@@ -75,11 +75,12 @@ public final class R {
         public static final int balloon_overlay=0x7f030000;
         public static final int buttonshape=0x7f030001;
         public static final int map=0x7f030002;
-        public static final int menu=0x7f030003;
-        public static final int menurow=0x7f030004;
-        public static final int trucklist=0x7f030005;
-        public static final int truckpage=0x7f030006;
-        public static final int truckrow=0x7f030007;
+        public static final int mapballoon=0x7f030003;
+        public static final int menu=0x7f030004;
+        public static final int menurow=0x7f030005;
+        public static final int trucklist=0x7f030006;
+        public static final int truckpage=0x7f030007;
+        public static final int truckrow=0x7f030008;
     }
     public static final class string {
         public static final int app_name=0x7f060000;

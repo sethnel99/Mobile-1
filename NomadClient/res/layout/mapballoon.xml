@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@id/balloon_inner_layout"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content" >
+
+    <RelativeLayout
+        android:id="@+id/balloon_main_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/balloon_overlay_bg_selector"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:paddingTop="5dp"
+      
+        
+        >
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+			android:layout_alignParentLeft="true"
+			android:layout_centerVertical="true"
+			
+			>
+
+            <TextView
+                android:id="@+id/balloon_item_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="balloon_item_title"
+                android:textColor="@color/navy"
+                android:textSize="16dip" />
+
+            <TextView
+                android:id="@+id/balloon_item_snippet"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="balloon_item_snippet"
+                android:textColor="@color/navy"
+                android:textSize="12dip"
+                android:layout_marginBottom="15dp" />
+        </LinearLayout>
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/arrow"
+            android:layout_alignParentRight="true" 
+            android:layout_centerVertical="true"
+            android:layout_marginBottom="15dp" />
+    </RelativeLayout>
+
+</FrameLayout>

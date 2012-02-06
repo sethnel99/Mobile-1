@@ -51,7 +51,9 @@ public class TruckPage extends Activity{
 		RelativeLayout mapViewButton = (RelativeLayout)findViewById(R.id.mapButtonView);
 		mapViewButton.setOnClickListener(new View.OnClickListener(){
 			public void onClick(View v) {
-				//Log.v("clicked map button","clicked map button");
+				Intent i = new Intent(thisClass, TruckMap.class);   
+				i.putExtra("fromPage", TruckMap.FROM_TRUCK_PAGE);
+				startActivity(i);
 			}
 		});
 		
