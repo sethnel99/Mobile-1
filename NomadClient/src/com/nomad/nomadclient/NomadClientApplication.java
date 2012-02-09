@@ -60,8 +60,9 @@ public class NomadClientApplication extends Application{
 	
 	//Loads the menu for the truck at the given index
 	public void loadMenuForTruck(int truckIndex){
-		//Gets the truck in question
+		//Gets the truck in question, and resets its menu
 		FoodTruck ft = trucks.get(truckIndex);
+		ft.menu = new ArrayList<MenuFoodItem>();
 		
 		//Sets up the query to find all menu items which belong to that truck
 		ParseQuery query = new ParseQuery("MenuItems");
@@ -80,10 +81,11 @@ public class NomadClientApplication extends Application{
 		//For each menu item, create a MenuFoodItem object and add it to that trucks menu
 		for(int i = 0; i < parseData.size(); i++){
 			ParseObject temp = parseData.get(i);
-
+			
+			String id = temp.getObjectId();
 			String name = temp.getString("Name");	
 			double price = temp.getInt("Price");
-			ft.menu.add(new MenuFoodItem(name,R.drawable.empanadapic,price));
+			ft.menu.add(new MenuFoodItem(id,name,R.drawable.empanadapic,price));
 		}
 		
 		//update that truck within trucks

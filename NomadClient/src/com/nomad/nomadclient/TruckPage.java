@@ -12,7 +12,7 @@ import android.widget.TextView;
 public class TruckPage extends Activity{
 	Activity thisClass = this;
 	FoodTruck foodTruck; //the food truck represented by the page
-	int truckIndex; //that trucks index in the gobal arraylist
+	int truckIndex; //that trucks index in the global arraylist
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
