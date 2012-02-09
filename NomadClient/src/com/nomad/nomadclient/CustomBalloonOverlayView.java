@@ -1,4 +1,5 @@
 /***
+
  * Copyright (c) 2011 readyState Software Ltd
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -24,7 +25,6 @@ import android.widget.TextView;
 
 import com.google.android.maps.OverlayItem;
 import com.readystatesoftware.mapviewballoons.BalloonOverlayView;
-import com.readystatesoftware.mapviewballoons.R;
 
 public class CustomBalloonOverlayView<Item extends OverlayItem> extends BalloonOverlayView<OverlayItem> {
 
