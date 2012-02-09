@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
@@ -12,69 +11,90 @@ import android.widget.TextView;
 
 public class TruckPage extends Activity{
 	Activity thisClass = this;
-	
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.truckpage);
-        
-        /*
-        Typeface tf = Typeface.createFromAsset(getAssets(),"fonts/CandelaBold.ttf");
-		((TextView)findViewById(R.id.scheduleButtonText)).setTypeface(tf);
-		((TextView)findViewById(R.id.menuButtonText)).setTypeface(tf);
-		((TextView)findViewById(R.id.mapButtonText)).setTypeface(tf);
-		((TextView)findViewById(R.id.latestMessageText)).setTypeface(tf);
-		((TextView)findViewById(R.id.phoneTextView)).setTypeface(tf);
-		((TextView)findViewById(R.id.latestMessagePromptText)).setTypeface(tf);
-		((TextView)findViewById(R.id.descriptTextView)).setTypeface(tf);
-		((TextView)findViewById(R.id.titleTextView)).setTypeface(tf)
-		*/
-        
+	FoodTruck foodTruck; //the food truck represented by the page
+	int truckIndex; //that trucks index in the gobal arraylist
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.truckpage);
+
+		//Grab the truck index (given as an extra) and get the trck
+		Bundle b = this.getIntent().getExtras();
+		truckIndex = b.getInt("truckIndex");
+		foodTruck = ((NomadClientApplication)this.getApplication()).getTrucks().get(truckIndex);
+
+		//Set up the views in this activity with the correct data
+		((TextView)findViewById(R.id.titleTextView)).setText(foodTruck.name);
+		((TextView)findViewById(R.id.descriptTextView)).setText(foodTruck.descriptor);
+
+
+		//What to do if they click the back button
 		Button backButton = (Button)findViewById(R.id.backButton);
 		backButton.setOnClickListener(new View.OnClickListener(){
 			public void onClick(View v) {
+				//finish this activity
 				finish();
 			}
 		});
-		
+
+		//What to do fi they click the phone-number button
 		TextView callPhone = (TextView)findViewById(R.id.phoneTextView);
 		callPhone.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
+
+				//Call the number
 				Intent intent = new Intent(Intent.ACTION_CALL);
 				intent.setData(Uri.parse("tel:" + "2409946399"));
 				startActivity(intent);
-				
+
 			}
 		});
-		
-		
+
+		//What to do if they click the map "button"
 		RelativeLayout mapViewButton = (RelativeLayout)findViewById(R.id.mapButtonView);
 		mapViewButton.setOnClickListener(new View.OnClickListener(){
 			public void onClick(View v) {
+				//start the map activity
 				Intent i = new Intent(thisClass, TruckMap.class);   
 				i.putExtra("fromPage", TruckMap.FROM_TRUCK_PAGE);
 				startActivity(i);
 			}
 		});
-		
+
+		//What to do if they click the menu "button"
 		RelativeLayout menuViewButton = (RelativeLayout)findViewById(R.id.menuButtonView);
 		menuViewButton.setOnClickListener(new View.OnClickListener(){
 			@Override
 			public void onClick(View v) {
-				//Log.v("clicked menu","clicked menu");
-				Intent i = new Intent(thisClass, Menu.class);           
+
+				//load the menu for that particular truck, if it hasn't been loaded already
+				if(foodTruck.menu.size() == 0){
+					LoadWithProgressDialog lwpd = new LoadWithProgressDialog(thisClass,"Loading","Loading Menu", new Runnable() {
+						public void run(){
+							((NomadClientApplication)thisClass.getApplication()).loadMenuForTruck(truckIndex);
+						}
+					});
+					lwpd.execute();
+				}
+
+				//start the menu class
+				Intent i = new Intent(thisClass, Menu.class);  
+				i.putExtra("truckIndex",truckIndex);
 				startActivity(i); 
 			}
 		});
-		
+
+
+		//What to do if they click the schedule "button"
 		RelativeLayout scheduleViewButton = (RelativeLayout)findViewById(R.id.scheduleButtonView);
 		scheduleViewButton.setOnClickListener(new View.OnClickListener(){
 			public void onClick(View v) {
 				//Log.v("clicked schedule button","clicked schedule button");
 			}
 		});
-		
-		
-    }
-       
+
+
+	}
+
 }

@@ -4,89 +4,95 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.app.ListActivity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
+import com.parse.Parse;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+
 public class NomadActivity extends ListActivity{
-	ListView mListView;
-	EditText searchBar;
-	FoodTruckListAdapter mListAdapter;
+	ListView mListView; //The listview displaying the trucks
+	EditText searchBar; //the editbox used to filter the list
+	FoodTruckListAdapter mListAdapter; //the adapter used to populate the listview
 	Activity thisClass = this;
 	
-    /** Called when the activity is first created. */
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.trucklist);
-       
-        mListView = this.getListView();
-        searchBar = (EditText)findViewById(R.id.searchEditText);
-        
-        ArrayList<FoodTruck> trucks = fillFakeTrucks();
-        
-        mListAdapter = new FoodTruckListAdapter(getApplicationContext(), trucks);
-        
-        setListAdapter(mListAdapter);
-        mListView.setTextFilterEnabled(true);
-        searchBar.addTextChangedListener(new TextWatcher(){
-            public void afterTextChanged(Editable s) {}
-            public void beforeTextChanged(CharSequence s, int start, int count, int after){}
-            public void onTextChanged(CharSequence s, int start, int before, int count){
-            	mListAdapter.getFilter().filter(s);
-            }
-        }); 
-        
-        Button mapButton = (Button)findViewById(R.id.mapButton);
-        mapButton.setOnClickListener(new View.OnClickListener(){
+
+
+	/** Called when the activity is first created. */
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.trucklist);
+
+		//initialize view variables
+		mListView = this.getListView();
+		searchBar = (EditText)findViewById(R.id.searchEditText);
+
+		//start up parse
+		Parse.initialize(this, "FoX2hKFWtiUIWgt2mioFIJvwdwgy461XAS7n367S", "EU6d1ccuc3rUiW09IXqnLGF8XNngazVCWZDvSfC1"); 
+		
+		//load all of the trucks from parse
+		LoadWithProgressDialog lwpd = new LoadWithProgressDialog(this,"Loading","Loading Truck Data", new Runnable() {
+			public void run(){
+				((NomadClientApplication)thisClass.getApplication()).loadTrucksFromParse();
+			}
+		});
+		lwpd.execute();
+		
+		//get the trucks from the global array
+		ArrayList<FoodTruck> trucks =((NomadClientApplication)this.getApplication()).getTrucks();
+		
+		
+
+		//set up the adapter
+		mListAdapter = new FoodTruckListAdapter(getApplicationContext(), trucks);
+		setListAdapter(mListAdapter);
+		mListView.setTextFilterEnabled(true);
+		
+		//set up the search bar to detect when its text has changed and filter the results
+		searchBar.addTextChangedListener(new TextWatcher(){
+			public void afterTextChanged(Editable s) {}
+			public void beforeTextChanged(CharSequence s, int start, int count, int after){}
+			public void onTextChanged(CharSequence s, int start, int before, int count){
+				mListAdapter.getFilter().filter(s);
+			}
+		}); 
+		
+		//What to do if they click the map button
+		Button mapButton = (Button)findViewById(R.id.mapButton);
+		mapButton.setOnClickListener(new View.OnClickListener(){
 			public void onClick(View v) {
+				//start the map activity
 				Intent i = new Intent(thisClass, TruckMap.class);   
 				i.putExtra("fromPage", TruckMap.FROM_LIST);
 				startActivity(i); 
 			}
 		});
+
+
+
+		
+		
 		
 
-        
-       
+	}
 
-        
-        
-        
-    }
-    
-    public  ArrayList<FoodTruck> fillFakeTrucks(){
-    	ArrayList<FoodTruck> toRet = new ArrayList<FoodTruck>();
-    	
-    	toRet.add(new FoodTruck("5411 Empanadas","W. Jackson & Wells", "5411 Empanadas"));
-    	toRet.add(new FoodTruck("Flirty Cupcakes","W. Jackson & Wells", "Flirty Cupcakes"));
-    	toRet.add(new FoodTruck("More Mobile","W. Jackson & Wells", "More Mobile"));
-    	toRet.add(new FoodTruck("Gaztro-Wagon","W. Jackson & Wells", "Gaztro-Wagon"));
-    	toRet.add(new FoodTruck("Meatyballs Mobile","W. Jackson & Wells", "Meatyballs Mobile"));
-    	toRet.add(new FoodTruck("Simple Sandwich","W. Jackson & Wells", "Simple Sandwich"));
-    	toRet.add(new FoodTruck("Happy Bodega","W. Jackson & Wells", "Happy Bodega"));
-    	toRet.add(new FoodTruck("Beavers Donuts","W. Jackson & Wells", "Beavers Donuts"));
-    	toRet.add(new FoodTruck("Brown Bag","W. Jackson & Wells", "Brown Bag"));
-    	toRet.add(new FoodTruck("Hummingbird Kitchen","W. Jackson & Wells", "Hummingbird Kitchen"));
-
-    	
-    	return toRet;
-    	
-    	
-    }
- 
-
-  
-    
+	//If any item in the list is clicked
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
-		Intent i = new Intent(this, TruckPage.class);           
+		//start the truck page activity for that truck
+		Intent i = new Intent(this, TruckPage.class);   
+		i.putExtra("truckIndex",0);
 		startActivity(i); 
 	}
 }
