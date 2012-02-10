@@ -5,5 +5,6 @@
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
 	<classpathentry kind="lib" path="lib/Parse-0.4.27.jar"/>
+	<classpathentry kind="lib" path="lib/android-mapviewballoons.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>

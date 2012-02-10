@@ -24,7 +24,6 @@ import android.widget.TextView;
 
 import com.google.android.maps.OverlayItem;
 import com.readystatesoftware.mapviewballoons.BalloonOverlayView;
-import com.readystatesoftware.mapviewballoons.R;
 
 public class CustomBalloonOverlayView<Item extends OverlayItem> extends BalloonOverlayView<OverlayItem> {
 
