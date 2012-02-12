@@ -55,14 +55,12 @@ public class NomadClientApplication extends Application{
 				String locationString = temp.getString("LocationString");
 				ParseGeoPoint pgeo = temp.getParseGeoPoint("Location");
 				GeoPoint location = new GeoPoint((int)(pgeo.getLatitude()*Math.pow(10,6)),(int)(pgeo.getLongitude()*Math.pow(10,6)));
+				
+				//get logo file, convert logo file into a drawable
 				ParseFile pf = (ParseFile)temp.get("Logo");
-				//convert logo file into a drawable
 				byte[] logoFile = pf.getData();
 				ByteArrayInputStream is = new ByteArrayInputStream(logoFile);
-				Bitmap bitmap = BitmapFactory.decodeStream(is);
-
-
-
+				Bitmap bitmapLogo = BitmapFactory.decodeStream(is);
 
 				//grab the first message for each truck as well, so save load time later
 				ParseQuery queryFirstMessage = new ParseQuery("Messages");
@@ -70,7 +68,7 @@ public class NomadClientApplication extends Application{
 				queryFirstMessage.orderByDescending("createdAt");
 
 				ParseObject firstMessage = queryFirstMessage.getFirst();
-				trucks.add(new FoodTruck(parseID, name,locationString,description,name,firstMessage.getString("Message"),new BitmapDrawable(bitmap)));
+				trucks.add(new FoodTruck(parseID, name,locationString,description,name,firstMessage.getString("Message"),new BitmapDrawable(bitmapLogo)));
 
 			}
 
@@ -100,6 +98,7 @@ public class NomadClientApplication extends Application{
 					for(int i = 0; i < parseData.size(); i++){
 						ParseObject temp = parseData.get(i);
 						trucks.get(truckIndex).messages.add(temp.getString("Message"));
+						Log.v("got message item",temp.getString("Message"));
 					}
 				} else {
 					Log.d("Parse", "Error: " + e.getMessage());
@@ -124,13 +123,23 @@ public class NomadClientApplication extends Application{
 						String id = temp.getObjectId();
 						String name = temp.getString("Name");	
 						double price = temp.getInt("Price");
+						Log.v("got menu item",name);
+						
+						//get logo file, convert logo file into a drawable
+						ParseFile pf;
+						byte[] logoFile = null;
+						try {
+							pf = (ParseFile)temp.get("ItemPic");
+							logoFile = pf.getData();
+						} catch (ParseException e1) {
+							Log.v("Parse Error",e.getMessage());
+						}
+						ByteArrayInputStream is = new ByteArrayInputStream(logoFile);
+						Bitmap bitmapPic = BitmapFactory.decodeStream(is);
 
-						trucks.get(truckIndex).menu.add(new MenuFoodItem(id,name,R.drawable.empanadapic,price));
+
+						trucks.get(truckIndex).menu.add(new MenuFoodItem(id,name,price,new BitmapDrawable(bitmapPic)));
 					}
-
-					//update that truck within trucks
-					//trucks.set(truckIndex, ft);
-
 
 				} else {
 					Log.d("Parse", "Error: " + e.getMessage());
@@ -146,66 +155,6 @@ public class NomadClientApplication extends Application{
 
 	}
 
-
-
-
-
-
-	//Loads the menu for the truck at the given index
-	public void loadMenuForTruck(int truckIndex){
-		//Gets the truck in question, and resets its menu
-		FoodTruck ft = trucks.get(truckIndex);
-		ft.menu = new ArrayList<MenuFoodItem>();
-
-
-
-		//Sets up the query to find all menu items which belong to that truck
-		ParseQuery query = new ParseQuery("MenuItems");
-		query.whereEqualTo("TruckID",ft.parseID);
-
-
-		//executes the query
-		ArrayList<ParseObject> parseData = new ArrayList<ParseObject>();
-		try {
-			parseData = query.find();
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		//For each menu item, create a MenuFoodItem object and add it to that trucks menu
-		for(int i = 0; i < parseData.size(); i++){
-			ParseObject temp = parseData.get(i);
-
-			String id = temp.getObjectId();
-			String name = temp.getString("Name");	
-			double price = temp.getInt("Price");
-			ft.menu.add(new MenuFoodItem(id,name,R.drawable.empanadapic,price));
-		}
-
-
-	}
-
-	/*
-	public  ArrayList<FoodTruck> fillFakeTrucks(){
-		ArrayList<FoodTruck> toRet = new ArrayList<FoodTruck>();
-
-		toRet.add(new FoodTruck("xy9RVozfL1","5411 Empanadas","W. Jackson & Wells","Empanadas", "5411 Empanadas"));
-		toRet.add(new FoodTruck("xy9RVozfL1","Flirty Cupcakes","W. Jackson & Wells","Empanadas", "Flirty Cupcakes"));
-		toRet.add(new FoodTruck("xy9RVozfL1","More Mobile","W. Jackson & Wells","Empanadas", "More Mobile"));
-		toRet.add(new FoodTruck("xy9RVozfL1","Gaztro-Wagon","W. Jackson & Wells","Empanadas", "Gaztro-Wagon"));
-		toRet.add(new FoodTruck("xy9RVozfL1","Meatyballs Mobile","W. Jackson & Wells","Empanadas", "Meatyballs Mobile"));
-		toRet.add(new FoodTruck("xy9RVozfL1","Simple Sandwich","W. Jackson & Wells","Empanadas", "Simple Sandwich"));
-		toRet.add(new FoodTruck("xy9RVozfL1","Happy Bodega","W. Jackson & Wells","Empanadas", "Happy Bodega"));
-		toRet.add(new FoodTruck("xy9RVozfL1","Beavers Donuts","W. Jackson & Wells","Empanadas", "Beavers Donuts"));
-		toRet.add(new FoodTruck("xy9RVozfL1","Brown Bag","W. Jackson & Wells","Empanadas", "Brown Bag"));
-		toRet.add(new FoodTruck("xy9RVozfL1","Hummingbird Kitchen","W. Jackson & Wells","Empanadas", "Hummingbird Kitchen"));
-
-
-		return toRet;
-
-
-	}*/
 
 	private abstract class MyFindCallback extends FindCallback{
 		int truckIndex;

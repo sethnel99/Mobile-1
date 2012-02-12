@@ -16,7 +16,8 @@ import android.widget.TextView;
 
 public class CustomListAdapter extends BaseAdapter{
 	public static int TEXTVIEW = 0;
-	public static int IMAGEVIEW = 1;
+	public static int IMAGEVIEW_RESOURCEDRAWABLE = 1;
+	public static int IMAGEVIEW_BITMAPDRAWABLE = 2;
 
 	int rowLayoutID; //the layout id of the row to be inflated
 	int[] viewIDs;	 //contains the ids of each view to be filled in within the row
@@ -178,10 +179,14 @@ public class CustomListAdapter extends BaseAdapter{
 				
 
 			}
-			else if(viewTypes[i] == this.IMAGEVIEW){
+			else if(viewTypes[i] == this.IMAGEVIEW_RESOURCEDRAWABLE){
 				ImageView iv = (ImageView)views[i];
 				iv.setImageResource(Integer.valueOf((String)items.get(position)[i]));
-			}	
+			}
+			else if (viewTypes[i] == this.IMAGEVIEW_BITMAPDRAWABLE){
+				ImageView iv = (ImageView)views[i];
+				//iv.setImageDrawable((items.get(position)[i])));
+			}
 		}
 
 		return row;

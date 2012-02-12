@@ -41,20 +41,21 @@ public class FoodTruckListAdapter extends CustomListAdapter{
 		super(c);
 		
 		if(type == MENU){
+			//data to pass to super class
 			ArrayList<String[]> items = new ArrayList<String[]>();
 			
-			int rowID = R.layout.menurow;
-			int[] viewIDs = {R.id.foodPic, R.id.menuItemText};
-			int[] viewTypes = {IMAGEVIEW, TEXTVIEW};
+			int rowID = R.layout.menurow; //layout id of the menu row layout file
+			int[] viewIDs = {R.id.foodPic, R.id.menuItemText}; //the views that will be populated in the row
+			int[] viewTypes = {IMAGEVIEW_RESOURCEDRAWABLE, TEXTVIEW}; //the types of those views
 			
 			String[] temp;
-			MenuFoodItem tempmfi;
-			ArrayList<MenuFoodItem> menu = ft.menu;
+			MenuFoodItem tempmfi; 
+			ArrayList<MenuFoodItem> menu = ft.menu; //fetch the menu
 			
-			for(int i = 0; i < menu.size(); i++){
+			for(int i = 0; i < menu.size(); i++){ //populate items using the data from menu
 				temp = new String[3];
 				tempmfi = menu.get(i);
-				temp[0] = String.valueOf(tempmfi.drawableID);
+				temp[0] = String.valueOf(R.drawable.empanadapic);
 				temp[1] = tempmfi.name;
 				items.add(temp);
 			}
