@@ -44,6 +44,7 @@ public final class R {
         public static final int descriptTextView=0x7f060014;
         public static final int distanceText=0x7f060020;
         public static final int foodPic=0x7f06000d;
+        public static final int globalPosition=0x7f060023;
         public static final int latestMessagePromptText=0x7f060017;
         public static final int latestMessageText=0x7f060018;
         public static final int latestMessageView=0x7f060016;

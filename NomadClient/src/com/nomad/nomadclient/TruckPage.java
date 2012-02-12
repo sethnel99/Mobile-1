@@ -28,6 +28,13 @@ public class TruckPage extends Activity{
 		((TextView)findViewById(R.id.titleTextView)).setText(foodTruck.name);
 		((TextView)findViewById(R.id.descriptTextView)).setText(foodTruck.descriptor);
 
+		//begin loading the truck's data in the background, if you need to 
+		if(foodTruck.menu.size() == 0)
+			((NomadClientApplication)thisClass.getApplication()).loadTruckLists(truckIndex);
+
+
+
+
 
 		//What to do if they click the back button
 		Button backButton = (Button)findViewById(R.id.backButton);
@@ -38,7 +45,7 @@ public class TruckPage extends Activity{
 			}
 		});
 
-		//What to do fi they click the phone-number button
+		//What to do if they click the phone-number button
 		TextView callPhone = (TextView)findViewById(R.id.phoneTextView);
 		callPhone.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
@@ -50,6 +57,7 @@ public class TruckPage extends Activity{
 
 			}
 		});
+
 
 		//What to do if they click the map "button"
 		RelativeLayout mapViewButton = (RelativeLayout)findViewById(R.id.mapButtonView);
@@ -68,20 +76,30 @@ public class TruckPage extends Activity{
 			@Override
 			public void onClick(View v) {
 
-				//load the menu for that particular truck, if it hasn't been loaded already
-				if(foodTruck.menu.size() == 0){
+				//if things are still loading, show a progress dialog in the meantime
+				if(((NomadClientApplication)thisClass.getApplication()).loadingInBackground != 0){
 					LoadWithProgressDialog lwpd = new LoadWithProgressDialog(thisClass,"Loading","Loading Menu", new Runnable() {
 						public void run(){
-							((NomadClientApplication)thisClass.getApplication()).loadMenuForTruck(truckIndex);
+							while(((NomadClientApplication)thisClass.getApplication()).loadingInBackground != 0){
+									try {
+										Thread.sleep(1000);
+									} catch (InterruptedException e) {
+										e.printStackTrace();
+									}
+							
+							}
+						}
+					},new Runnable() {
+						public void run(){
+							//start the menu class
+							Intent i = new Intent(thisClass, Menu.class);  
+							i.putExtra("truckIndex",truckIndex);
+							startActivity(i); 
 						}
 					});
 					lwpd.execute();
 				}
 
-				//start the menu class
-				Intent i = new Intent(thisClass, Menu.class);  
-				i.putExtra("truckIndex",truckIndex);
-				startActivity(i); 
 			}
 		});
 

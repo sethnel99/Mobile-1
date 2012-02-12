@@ -1,206 +1,215 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" 
-    android:background="@drawable/backgroundrepeat">
-
-    <LinearLayout
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:id="@+id/topBar"
+        android:layout_width="fill_parent"
+        android:layout_height="60dp"
+        android:layout_marginBottom="5dp"
+        android:background="@drawable/header_bg"
+        android:paddingBottom="3dp"
+        android:paddingTop="3dp" >
+
+        <Button
+            android:id="@+id/backButton"
+            android:layout_width="70dp"
+            android:layout_height="fill_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_marginBottom="8dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/backbtn"
+            android:textSize="10dp" />
+
+        <ImageView
+            android:id="@+id/nomadLogoImageView"
+            android:layout_width="160dp"
+            android:layout_height="60dp"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/templogo" />
+    </RelativeLayout>
+
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center_horizontal"
-        android:orientation="vertical" >
-
-        <RelativeLayout
-            android:id="@+id/topBar"
-            android:layout_width="fill_parent"
-            android:layout_height="60dp"
-            android:layout_marginBottom="5dp"
-            android:background="@drawable/header_bg"
-            android:paddingBottom="3dp"
-            android:paddingTop="3dp" >
-
-            <Button
-                android:id="@+id/backButton"
-                android:layout_width="70dp"
-                android:layout_height="fill_parent"
-                android:layout_alignParentLeft="true"
-                android:layout_marginBottom="8dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginTop="8dp"
-                android:background="@drawable/backbtn"
-                android:textSize="10dp" />
-
-            <ImageView
-                android:id="@+id/nomadLogoImageView"
-                android:layout_width="160dp"
-                android:layout_height="60dp"
-                android:layout_centerHorizontal="true"
-                android:src="@drawable/templogo" />
-        </RelativeLayout>
-
-        <TextView
-            android:id="@+id/titleTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:text="Duck n&apos; Roll"
-            android:textColor="@color/navy"
-            android:textSize="30dp" />
-
-        <!-- this ought to be a wrap content width and height. Need to find a good aspect ratio for the logo to make that happen -->
-        <ImageView
-            android:id="@+id/truckLogoImageView"
-            android:layout_width="wrap_content"
-            android:layout_height="120dp"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="30dp"
-            android:adjustViewBounds="true"
-            android:src="@drawable/ducknroll" />
-
-        <TextView
-            android:id="@+id/descriptTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="15dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="5dp"
-            android:gravity="center_horizontal"
-            android:text="Vietnamese Sandwiches"
-            android:textColor="@color/navy" />
-
-        <TextView
-            android:id="@+id/phoneTextView"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="30dp"
-            android:background="@layout/buttonshape"
-            android:gravity="center_horizontal"
-            android:text="(773) 417-6013"
-            android:textColor="#000000"
-            android:textSize="22dp" />
+        android:background="@drawable/backgroundrepeat" >
 
         <LinearLayout
-            android:id="@+id/latestMessageView"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="30dp"
-            android:background="@layout/buttonshape"
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:gravity="center_horizontal"
             android:orientation="vertical" >
 
             <TextView
-                android:id="@+id/latestMessagePromptText"
+                android:id="@+id/titleTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:text="Duck n&apos; Roll"
+                android:textColor="@color/navy"
+                android:textSize="30dp" />
+
+            <!-- this ought to be a wrap content width and height. Need to find a good aspect ratio for the logo to make that happen -->
+
+            <ImageView
+                android:id="@+id/truckLogoImageView"
+                android:layout_width="wrap_content"
+                android:layout_height="120dp"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:adjustViewBounds="true"
+                android:src="@drawable/ducknroll" />
+
+            <TextView
+                android:id="@+id/descriptTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="15dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="5dp"
+                android:gravity="center_horizontal"
+                android:text="Vietnamese Sandwiches"
+                android:textColor="@color/navy" />
+
+            <TextView
+                android:id="@+id/phoneTextView"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:background="@layout/buttonshape"
                 android:gravity="center_horizontal"
-                android:text="@string/latestmessage"
+                android:text="(773) 417-6013"
                 android:textColor="#000000"
                 android:textSize="22dp" />
 
-            <TextView
-                android:id="@+id/latestMessageText"
+            <LinearLayout
+                android:id="@+id/latestMessageView"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:background="@layout/buttonshape"
                 android:gravity="center_horizontal"
-                android:text="&apos;The cluck has landed Hyde Park. AT 57th and Ellis (across the library)&apos;"
-                android:textColor="#000000" />
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/latestMessagePromptText"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:gravity="center_horizontal"
+                    android:text="@string/latestmessage"
+                    android:textColor="#000000"
+                    android:textSize="22dp" />
+
+                <TextView
+                    android:id="@+id/latestMessageText"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:text="&apos;The cluck has landed Hyde Park. AT 57th and Ellis (across the library)&apos;"
+                    android:textColor="#000000" />
+            </LinearLayout>
+
+            <RelativeLayout
+                android:id="@+id/mapButtonView"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:background="@layout/buttonshape" >
+
+                <TextView
+                    android:id="@+id/mapButtonText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginRight="30dp"
+                    android:padding="3dp"
+                    android:text="@string/map"
+                    android:textColor="#000000"
+                    android:textSize="22dp" />
+
+                <ImageView
+                    android:id="@+id/rightArrow"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:padding="3dp"
+                    android:src="@drawable/arrow" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/menuButtonView"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:background="@layout/buttonshape" >
+
+                <TextView
+                    android:id="@+id/menuButtonText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginRight="30dp"
+                    android:padding="3dp"
+                    android:text="@string/menu"
+                    android:textColor="#000000"
+                    android:textSize="22dp" />
+
+                <ImageView
+                    android:id="@+id/rightArrow"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:padding="3dp"
+                    android:src="@drawable/arrow" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/scheduleButtonView"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:background="@layout/buttonshape" >
+
+                <TextView
+                    android:id="@+id/scheduleButtonText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginRight="30dp"
+                    android:padding="3dp"
+                    android:text="@string/schedule"
+                    android:textColor="#000000"
+                    android:textSize="22dp" />
+
+                <ImageView
+                    android:id="@+id/rightArrow"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:padding="3dp"
+                    android:src="@drawable/arrow" />
+            </RelativeLayout>
         </LinearLayout>
+    </ScrollView>
 
-        <RelativeLayout
-            android:id="@+id/mapButtonView"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="30dp"
-            android:background="@layout/buttonshape" >
-
-            <TextView
-                android:id="@+id/mapButtonText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_marginRight="30dp"
-                android:padding="3dp"
-                android:text="@string/map"
-                android:textColor="#000000"
-                android:textSize="22dp" />
-
-            <ImageView
-                android:id="@+id/rightArrow"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:padding="3dp"
-                android:src="@drawable/arrow" />
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/menuButtonView"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="30dp"
-            android:background="@layout/buttonshape" >
-
-            <TextView
-                android:id="@+id/menuButtonText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_marginRight="30dp"
-                android:padding="3dp"
-                android:text="@string/menu"
-                android:textColor="#000000"
-                android:textSize="22dp" />
-
-            <ImageView
-                android:id="@+id/rightArrow"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:padding="3dp"
-                android:src="@drawable/arrow" />
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/scheduleButtonView"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="30dp"
-            android:background="@layout/buttonshape" >
-
-            <TextView
-                android:id="@+id/scheduleButtonText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_marginRight="30dp"
-                android:padding="3dp"
-                android:text="@string/schedule"
-                android:textColor="#000000"
-                android:textSize="22dp" />
-
-            <ImageView
-                android:id="@+id/rightArrow"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:padding="3dp"
-                android:src="@drawable/arrow" />
-        </RelativeLayout>
-    </LinearLayout>
-
-</ScrollView>
+</LinearLayout>

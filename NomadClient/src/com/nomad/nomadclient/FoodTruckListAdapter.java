@@ -13,9 +13,8 @@ public class FoodTruckListAdapter extends CustomListAdapter{
 	public FoodTruckListAdapter(Context c, ArrayList<FoodTruck> a){
 		super(c);
 		int rowID = R.layout.truckrow;
-		int[] viewIDs = {R.id.distanceText, R.id.nameText, R.id.locationText};
-		int[] viewTypes = {TEXTVIEW, TEXTVIEW, TEXTVIEW };
-		int sortField = 0;
+		int[] viewIDs = {R.id.distanceText, R.id.nameText, R.id.locationText, R.id.globalPosition};
+		int[] viewTypes = {TEXTVIEW, TEXTVIEW, TEXTVIEW, TEXTVIEW };
 		
 		ArrayList<String[]> items = new ArrayList<String[]>();
 		ArrayList<String> searchFields =  new ArrayList<String>();
@@ -23,11 +22,12 @@ public class FoodTruckListAdapter extends CustomListAdapter{
 		String[] temp;
 		FoodTruck tempft;
 		for(int i = 0; i < a.size(); i++){
-			temp = new String[3];
+			temp = new String[4];
 			tempft = a.get(i);
 			temp[0] = String.valueOf(tempft.calculateDistance());
 			temp[1] = tempft.name;
 			temp[2] = tempft.location;
+			temp[3] = ""+i;
 			items.add(temp);
 			searchFields.add(tempft.searchString);
 			//Log.v("creating",""+items.get(i)[1] + ":"+searchFields[i]);

@@ -9,13 +9,15 @@ public class LoadWithProgressDialog extends AsyncTask<Void, Void, Boolean>{
 	private String title; //the title of the progress dialog
 	private String  message; //the body of the progress dialog
 	private Runnable task; //contains the code we want to run in the background
+	private Runnable postTask; //execute when the task ends
 	private Context c;
-	
 
-	public LoadWithProgressDialog(Context context,String t, String m,Runnable r){
+
+	public LoadWithProgressDialog(Context context,String t, String m,Runnable r, Runnable postR){
 		super();
 		c = context;
 		task = r;
+		postTask = postR;
 		title = t;
 		message = m;
 	}
@@ -34,7 +36,9 @@ public class LoadWithProgressDialog extends AsyncTask<Void, Void, Boolean>{
 
 	@Override
 	protected void onPostExecute(Boolean result) {
-		pd.dismiss(); 
+		pd.dismiss();
+		if(postTask != null)
+			postTask.run();
 	}
 
 

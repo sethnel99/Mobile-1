@@ -54,5 +54,12 @@
 		android:padding = "10dp"
 		android:layout_centerVertical="true"
 		/>
+    
+    
+    <TextView
+        android:id="@+id/globalPosition"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="invisible" />
 
 </RelativeLayout>

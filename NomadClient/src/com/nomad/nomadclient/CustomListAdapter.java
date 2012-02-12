@@ -164,16 +164,18 @@ public class CustomListAdapter extends BaseAdapter{
 
 		View[] views = new View[viewIDs.length];
 
-
 		for(int i = 0; i < views.length; i++){
 
 
 
 			views[i] = row.findViewById(viewIDs[i]);
-
+			
+			
 			if(viewTypes[i] == this.TEXTVIEW){
+		
 				TextView tv = (TextView)views[i];
 				tv.setText((String)items.get(position)[i]);
+				
 
 			}
 			else if(viewTypes[i] == this.IMAGEVIEW){
