@@ -2,7 +2,7 @@ package com.nomad.nomadclient;
 
 import java.util.ArrayList;
 
-import android.view.MenuItem;
+import android.graphics.drawable.BitmapDrawable;
 
 public class FoodTruck {
 	public String parseID; //the object ID of the truck on parse
@@ -12,8 +12,9 @@ public class FoodTruck {
 	public String searchString; //the search string of the truck
 	public ArrayList<MenuFoodItem> menu; //the trucks menu
 	public ArrayList<String> messages; //the messages/tweets from the truck
+	public BitmapDrawable logo; //the truc's logo
 
-	public FoodTruck(String id, String n, String l, String d, String s,String firstMessage){
+	public FoodTruck(String id, String n, String l, String d, String s,String firstMessage, BitmapDrawable pic){
 		id = parseID;
 		name = n;
 		location = l;
@@ -21,6 +22,7 @@ public class FoodTruck {
 		searchString = s;
 		menu = new ArrayList<MenuFoodItem>();
 		messages = new ArrayList<String>();
+		logo = pic;
 		if(firstMessage != null)
 			messages.add(firstMessage);
 	}

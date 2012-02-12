@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -27,6 +28,7 @@ public class TruckPage extends Activity{
 		//Set up the views in this activity with the correct data
 		((TextView)findViewById(R.id.titleTextView)).setText(foodTruck.name);
 		((TextView)findViewById(R.id.descriptTextView)).setText(foodTruck.descriptor);
+		((ImageView)findViewById(R.id.truckLogoImageView)).setImageDrawable(foodTruck.logo);
 
 		//begin loading the truck's data in the background, if you need to 
 		if(foodTruck.menu.size() == 0)

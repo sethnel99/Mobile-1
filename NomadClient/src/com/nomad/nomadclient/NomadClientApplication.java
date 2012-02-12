@@ -1,14 +1,19 @@
 package com.nomad.nomadclient;
 
+import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Application;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.util.Log;
 
 import com.google.android.maps.GeoPoint;
 import com.parse.FindCallback;
 import com.parse.ParseException;
+import com.parse.ParseFile;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
@@ -45,11 +50,18 @@ public class NomadClientApplication extends Application{
 
 				String parseID = (String)temp.getObjectId();
 				String name = temp.getString("Name");
+				Log.v("new truck from parse",name);
 				String description = temp.getString("Sescription");
 				String locationString = temp.getString("LocationString");
 				ParseGeoPoint pgeo = temp.getParseGeoPoint("Location");
 				GeoPoint location = new GeoPoint((int)(pgeo.getLatitude()*Math.pow(10,6)),(int)(pgeo.getLongitude()*Math.pow(10,6)));
-				Log.v("new truck from parse",name);
+				ParseFile pf = (ParseFile)temp.get("Logo");
+				//convert logo file into a drawable
+				byte[] logoFile = pf.getData();
+				ByteArrayInputStream is = new ByteArrayInputStream(logoFile);
+				Bitmap bitmap = BitmapFactory.decodeStream(is);
+
+
 
 
 				//grab the first message for each truck as well, so save load time later
@@ -58,7 +70,7 @@ public class NomadClientApplication extends Application{
 				queryFirstMessage.orderByDescending("createdAt");
 
 				ParseObject firstMessage = queryFirstMessage.getFirst();
-				trucks.add(new FoodTruck(parseID, name,locationString,description,name,firstMessage.getString("Message")));
+				trucks.add(new FoodTruck(parseID, name,locationString,description,name,firstMessage.getString("Message"),new BitmapDrawable(bitmap)));
 
 			}
 
