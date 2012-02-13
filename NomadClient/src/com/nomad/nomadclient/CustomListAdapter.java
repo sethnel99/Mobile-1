@@ -21,8 +21,8 @@ public class CustomListAdapter extends BaseAdapter{
 
 	int rowLayoutID; //the layout id of the row to be inflated
 	int[] viewIDs;	 //contains the ids of each view to be filled in within the row
-	public ArrayList<String[]> items; //all of the data - each element of the arraylist is a string[] containing either string messages or image resource ids
-	public ArrayList<String[]> originalItems; //the original items in listview. Used for filtering.
+	public ArrayList<Object[]> items; //all of the data - each element of the arraylist is a string[] containing either string messages or image resource ids
+	public ArrayList<Object[]> originalItems; //the original items in listview. Used for filtering.
 	int[] viewTypes; //for each view id, what type of view is it?
 	ArrayList<String> searchableStrings;
 	int sortField; //the field within each String[] which should be used to filter the list. i.e. sortField = 2, so sort the ArrayList based on the
@@ -31,7 +31,7 @@ public class CustomListAdapter extends BaseAdapter{
 	Boolean filteredList; //if the list is being filtered or not
 	MyCustomFilter mFilter; //filter for listview
 
-	public CustomListAdapter(Context context, int rID, int[] vIDs, int[] vTypes, ArrayList<String[]> i, ArrayList<String> sFields, int sf){
+	public CustomListAdapter(Context context, int rID, int[] vIDs, int[] vTypes, ArrayList<Object[]> i, ArrayList<String> sFields, int sf){
 		viewIDs = vIDs;
 		viewTypes = vTypes;
 		items = i;
@@ -44,8 +44,8 @@ public class CustomListAdapter extends BaseAdapter{
 		items = i;
 		originalItems = i;
 	}
-	
-	public CustomListAdapter(Context context, int rID, int[] vIDs, int[] vTypes, ArrayList<String[]> i, int sf){
+
+	public CustomListAdapter(Context context, int rID, int[] vIDs, int[] vTypes, ArrayList<Object[]> i, int sf){
 		viewIDs = vIDs;
 		viewTypes = vTypes;
 		rowLayoutID = rID;
@@ -55,8 +55,8 @@ public class CustomListAdapter extends BaseAdapter{
 		sortItemsByField();
 		originalItems = i;
 	}
-	
-	public CustomListAdapter(Context context, int rID, int[] vIDs, int[] vTypes, ArrayList<String[]> i, ArrayList<String> sFields){
+
+	public CustomListAdapter(Context context, int rID, int[] vIDs, int[] vTypes, ArrayList<Object[]> i, ArrayList<String> sFields){
 		viewIDs = vIDs;
 		viewTypes = vTypes;
 		items = i;
@@ -65,8 +65,8 @@ public class CustomListAdapter extends BaseAdapter{
 		c = context;
 		filteredList = true;
 	}
-	
-	public CustomListAdapter(Context context, int rID, int[] vIDs, int[] vTypes, ArrayList<String[]> i){
+
+	public CustomListAdapter(Context context, int rID, int[] vIDs, int[] vTypes, ArrayList<Object[]> i){
 		viewIDs = vIDs;
 		viewTypes = vTypes;
 		items = i;
@@ -75,20 +75,20 @@ public class CustomListAdapter extends BaseAdapter{
 		c = context;
 		filteredList = false;
 	}
-	
+
 	protected CustomListAdapter(Context context){
 		c = context;
 		viewIDs = null;
 		viewTypes = null;
-		items = new ArrayList<String[]>();
-		originalItems = new ArrayList<String[]>();
+		items = new ArrayList<Object[]>();
+		originalItems = new ArrayList<Object[]>();
 		rowLayoutID = 0;
 		searchableStrings = new ArrayList<String>();
 		sortField = 0;
 		filteredList = false;
 	}
-	
-	protected void initAdapter(int rID, int[] vIDs, int[] vTypes, ArrayList<String[]> i, ArrayList<String> sFields, int sf){
+
+	protected void initAdapter(int rID, int[] vIDs, int[] vTypes, ArrayList<Object[]> i, ArrayList<String> sFields, int sf){
 		viewIDs = vIDs;
 		viewTypes = vTypes;
 		items = i;
@@ -98,11 +98,11 @@ public class CustomListAdapter extends BaseAdapter{
 		sortField = sf;
 		sortItemsByField();
 		originalItems = i;
-		
-		
+
+
 	}
-	
-	protected void initAdapter(int rID, int[] vIDs, int[] vTypes, ArrayList<String[]> i, int sf){
+
+	protected void initAdapter(int rID, int[] vIDs, int[] vTypes, ArrayList<Object[]> i, int sf){
 		viewIDs = vIDs;
 		viewTypes = vTypes;
 		items = i;
@@ -112,8 +112,8 @@ public class CustomListAdapter extends BaseAdapter{
 		sortItemsByField();
 		originalItems = i;
 	}
-	
-	public void initAdapter(int rID, int[] vIDs, int[] vTypes, ArrayList<String[]> i, ArrayList<String> sFields){
+
+	public void initAdapter(int rID, int[] vIDs, int[] vTypes, ArrayList<Object[]> i, ArrayList<String> sFields){
 		viewIDs = vIDs;
 		viewTypes = vTypes;
 		items = i;
@@ -122,8 +122,8 @@ public class CustomListAdapter extends BaseAdapter{
 		searchableStrings = sFields;
 		filteredList = true;
 	}
-	
-	protected void initAdapter(int rID, int[] vIDs, int[] vTypes, ArrayList<String[]> i){
+
+	protected void initAdapter(int rID, int[] vIDs, int[] vTypes, ArrayList<Object[]> i){
 		viewIDs = vIDs;
 		viewTypes = vTypes;
 		items = i;
@@ -131,28 +131,28 @@ public class CustomListAdapter extends BaseAdapter{
 		rowLayoutID = rID;
 		filteredList = false;
 	}
-	
-	
+
+
 
 	//sorts the ArrayList of items based on the given sortField
 	public void sortItemsByField(){
 		final ArrayList<String> copy = new ArrayList<String>(searchableStrings);
-		
+
 		Collections.sort(searchableStrings,new Comparator<String>() {
 			//custom compare of String[]'s
 			public int compare(String string, String otherString) {
-				return items.get(copy.indexOf(string))[sortField].compareToIgnoreCase(items.get(copy.indexOf(otherString))[sortField]);
+				return ((String)items.get(copy.indexOf(string))[sortField]).compareToIgnoreCase(((String)  items.get(copy.indexOf(otherString))[sortField]));
 			}
 		});
-		
-		Collections.sort(items,new Comparator<String[]>() {
-			//custom compare of String[]'s
-			public int compare(String[] strings, String[] otherStrings) {
-				return strings[sortField].compareToIgnoreCase(otherStrings[sortField]);
+
+		Collections.sort(items,new Comparator<Object[]>() {
+			//custom compare of Object[]s
+			public int compare(Object[] objects, Object[] otherObjects) {
+				return ((String)objects[sortField]).compareToIgnoreCase((String)otherObjects[sortField]);
 			}
 		});
-		
-		
+
+
 	}
 
 
@@ -170,13 +170,13 @@ public class CustomListAdapter extends BaseAdapter{
 
 
 			views[i] = row.findViewById(viewIDs[i]);
-			
-			
+
+
 			if(viewTypes[i] == this.TEXTVIEW){
-		
+
 				TextView tv = (TextView)views[i];
 				tv.setText((String)items.get(position)[i]);
-				
+
 
 			}
 			else if(viewTypes[i] == this.IMAGEVIEW_RESOURCEDRAWABLE){
@@ -224,8 +224,8 @@ public class CustomListAdapter extends BaseAdapter{
 
 		@Override 
 		protected FilterResults performFiltering(CharSequence constraint) {
-				
-				//Log.v("Filtering",""+constraint);
+
+			//Log.v("Filtering",""+constraint);
 
 			// Initiate our results object
 			FilterResults results = new FilterResults();
@@ -242,15 +242,15 @@ public class CustomListAdapter extends BaseAdapter{
 				String constraintString = constraint.toString().toLowerCase();
 
 				//will store the new list of filtered items
-				final ArrayList<String[]> newItems = new ArrayList<String[]>();
+				final ArrayList<Object[]> newItems = new ArrayList<Object[]>();
 
 				//check each original item
 				for (int i = 0; i < originalItems.size(); i++) {
-				
+
 					//if the list isn't meant to be filtered, or it is and this entry matches the filter, add it to the new list
 					if (!filteredList || searchableStrings.get(i).toLowerCase().contains(constraintString)) {
 						Log.v("add in filter",""+constraintString+":"+searchableStrings.get(i)+":"+originalItems.get(i)[1]);
-	
+
 						newItems.add(originalItems.get(i));
 					}  
 
@@ -266,7 +266,7 @@ public class CustomListAdapter extends BaseAdapter{
 		@Override
 		protected void publishResults(CharSequence prefix, FilterResults results) {
 			//set items to the results of the filtering
-			items = (ArrayList<String[]>) results.values;
+			items = (ArrayList<Object[]>) results.values;
 			//Log.v("publishresults",""+items);
 
 			// Let the adapter know about the updated list

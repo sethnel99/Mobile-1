@@ -16,10 +16,10 @@ public class FoodTruckListAdapter extends CustomListAdapter{
 		int[] viewIDs = {R.id.distanceText, R.id.nameText, R.id.locationText, R.id.globalPosition};
 		int[] viewTypes = {TEXTVIEW, TEXTVIEW, TEXTVIEW, TEXTVIEW };
 		
-		ArrayList<String[]> items = new ArrayList<String[]>();
+		ArrayList<Object[]> items = new ArrayList<Object[]>();
 		ArrayList<String> searchFields =  new ArrayList<String>();
 		
-		String[] temp;
+		Object[] temp;
 		FoodTruck tempft;
 		for(int i = 0; i < a.size(); i++){
 			temp = new String[4];
@@ -42,7 +42,7 @@ public class FoodTruckListAdapter extends CustomListAdapter{
 		
 		if(type == MENU){
 			//data to pass to super class
-			ArrayList<String[]> items = new ArrayList<String[]>();
+			ArrayList<Object[]> items = new ArrayList<Object[]>();
 			
 			int rowID = R.layout.menurow; //layout id of the menu row layout file
 			int[] viewIDs = {R.id.foodPic, R.id.menuItemText}; //the views that will be populated in the row

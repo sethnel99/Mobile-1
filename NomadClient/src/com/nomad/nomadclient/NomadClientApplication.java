@@ -123,7 +123,6 @@ public class NomadClientApplication extends Application{
 						String id = temp.getObjectId();
 						String name = temp.getString("Name");	
 						double price = temp.getInt("Price");
-						Log.v("got menu item",name);
 						
 						//get logo file, convert logo file into a drawable
 						ParseFile pf;
@@ -137,7 +136,7 @@ public class NomadClientApplication extends Application{
 						ByteArrayInputStream is = new ByteArrayInputStream(logoFile);
 						Bitmap bitmapPic = BitmapFactory.decodeStream(is);
 
-
+						Log.v("got menu item",name);
 						trucks.get(truckIndex).menu.add(new MenuFoodItem(id,name,price,new BitmapDrawable(bitmapPic)));
 					}
 
