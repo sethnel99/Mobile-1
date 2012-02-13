@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.Comparator;
 
 import android.content.Context;
+import android.graphics.drawable.BitmapDrawable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,7 +22,7 @@ public class CustomListAdapter extends BaseAdapter{
 
 	int rowLayoutID; //the layout id of the row to be inflated
 	int[] viewIDs;	 //contains the ids of each view to be filled in within the row
-	public ArrayList<Object[]> items; //all of the data - each element of the arraylist is a string[] containing either string messages or image resource ids
+	public ArrayList<Object[]> items; //all of the data - each element of the arraylist is an Object[] containing either string messages or image resource ids or bitmaps
 	public ArrayList<Object[]> originalItems; //the original items in listview. Used for filtering.
 	int[] viewTypes; //for each view id, what type of view is it?
 	ArrayList<String> searchableStrings;
@@ -137,14 +138,15 @@ public class CustomListAdapter extends BaseAdapter{
 	//sorts the ArrayList of items based on the given sortField
 	public void sortItemsByField(){
 		final ArrayList<String> copy = new ArrayList<String>(searchableStrings);
-
+		
+		//sorts searchable strings based on the sort field
 		Collections.sort(searchableStrings,new Comparator<String>() {
 			//custom compare of String[]'s
 			public int compare(String string, String otherString) {
 				return ((String)items.get(copy.indexOf(string))[sortField]).compareToIgnoreCase(((String)  items.get(copy.indexOf(otherString))[sortField]));
 			}
 		});
-
+		//sorts items based on the sort field
 		Collections.sort(items,new Comparator<Object[]>() {
 			//custom compare of Object[]s
 			public int compare(Object[] objects, Object[] otherObjects) {
@@ -185,7 +187,7 @@ public class CustomListAdapter extends BaseAdapter{
 			}
 			else if (viewTypes[i] == this.IMAGEVIEW_BITMAPDRAWABLE){
 				ImageView iv = (ImageView)views[i];
-				//iv.setImageDrawable((items.get(position)[i])));
+				iv.setImageDrawable((BitmapDrawable)(items.get(position)[i]));
 			}
 		}
 

@@ -22,7 +22,7 @@ public class FoodTruckListAdapter extends CustomListAdapter{
 		Object[] temp;
 		FoodTruck tempft;
 		for(int i = 0; i < a.size(); i++){
-			temp = new String[4];
+			temp = new Object[4];
 			tempft = a.get(i);
 			temp[0] = String.valueOf(tempft.calculateDistance());
 			temp[1] = tempft.name;
@@ -46,16 +46,16 @@ public class FoodTruckListAdapter extends CustomListAdapter{
 			
 			int rowID = R.layout.menurow; //layout id of the menu row layout file
 			int[] viewIDs = {R.id.foodPic, R.id.menuItemText}; //the views that will be populated in the row
-			int[] viewTypes = {IMAGEVIEW_RESOURCEDRAWABLE, TEXTVIEW}; //the types of those views
+			int[] viewTypes = {IMAGEVIEW_BITMAPDRAWABLE, TEXTVIEW}; //the types of those views
 			
-			String[] temp;
+			Object[] temp;
 			MenuFoodItem tempmfi; 
 			ArrayList<MenuFoodItem> menu = ft.menu; //fetch the menu
 			
 			for(int i = 0; i < menu.size(); i++){ //populate items using the data from menu
-				temp = new String[3];
+				temp = new Object[3];
 				tempmfi = menu.get(i);
-				temp[0] = String.valueOf(R.drawable.empanadapic);
+				temp[0] = tempmfi.itemPicture;
 				temp[1] = tempmfi.name;
 				items.add(temp);
 			}
