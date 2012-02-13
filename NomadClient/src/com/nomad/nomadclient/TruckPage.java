@@ -98,7 +98,7 @@ public class TruckPage extends Activity{
 					},new Runnable() {
 						public void run(){
 							//start the menu class
-							Intent i = new Intent(thisClass, Menu.class);  
+							Intent i= new Intent(thisClass, Menu.class);
 							i.putExtra("truckIndex",truckIndex);
 							startActivity(i); 
 						}
@@ -119,7 +119,11 @@ public class TruckPage extends Activity{
 		RelativeLayout scheduleViewButton = (RelativeLayout)findViewById(R.id.scheduleButtonView);
 		scheduleViewButton.setOnClickListener(new View.OnClickListener(){
 			public void onClick(View v) {
-				//Log.v("clicked schedule button","clicked schedule button");
+				Log.v("clicked schedule button","clicked schedule button");
+				//start the map activity
+				Intent i = new Intent(thisClass, Schedule.class);   
+				i.putExtra("fromPage", TruckMap.FROM_TRUCK_PAGE);
+				startActivity(i);
 			}
 		});
 

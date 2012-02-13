@@ -1,12 +1,11 @@
 package com.nomad.nomadclient;
 
-import java.util.ArrayList;
-
 import android.app.ListActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 
 public class Menu extends ListActivity{
 	ListView mListView;	//the listview for the menu items
@@ -35,15 +34,8 @@ public class Menu extends ListActivity{
         //fetch the foodtruck who's menu will be shown
         int truckIndex = getIntent().getExtras().getInt("truckIndex");
         foodTruck = ((NomadClientApplication)this.getApplication()).getTrucks().get(truckIndex); 
-      
-        /*ArrayList<MenuFoodItem> menu = new ArrayList<MenuFoodItem>();
-        for(int i = 0; i < 15; i++){
-        	menu.add(new MenuFoodItem("Chicken Empanadas",R.drawable.empanadapic,9.99));
-        }
-        
-        FoodTruck temp = new FoodTruck("xy9RVozfL1","5411 Empanadas","W. Jackson and Wells","Empanadas","5411 Empanadas");
-        temp.addMenu(menu);
-        */
+ 
+        ((TextView)findViewById(R.id.menuPrompt)).setText(foodTruck.name + "'s Menu");
         
         //set up the adapter
         mListAdapter = new FoodTruckListAdapter(getApplicationContext(),foodTruck,FoodTruckListAdapter.MENU);
