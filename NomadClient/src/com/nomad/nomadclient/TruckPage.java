@@ -82,12 +82,12 @@ public class TruckPage extends Activity{
 				Log.v("menu button pressed","yes");
 
 				//if things are still loading, show a progress dialog in the meantime
-				if(((NomadClientApplication)thisClass.getApplication()).loadingInBackground != 0){
-					Log.v("loading not done","yet");
+				if(((NomadClientApplication)thisClass.getApplication()).loadingMenu){
+					Log.v("loading menu not done","yet");
 					
 					LoadWithProgressDialog lwpd = new LoadWithProgressDialog(thisClass,"Loading","Loading Menu", new Runnable() {
 						public void run(){
-							while(((NomadClientApplication)thisClass.getApplication()).loadingInBackground != 0){
+							while(((NomadClientApplication)thisClass.getApplication()).loadingMenu){
 									try {
 										Thread.sleep(1000);
 									} catch (InterruptedException e) {
@@ -121,10 +121,42 @@ public class TruckPage extends Activity{
 		scheduleViewButton.setOnClickListener(new View.OnClickListener(){
 			public void onClick(View v) {
 				Log.v("clicked schedule button","clicked schedule button");
-				//start the map activity
-				Intent i = new Intent(thisClass, Schedule.class);   
-				i.putExtra("fromPage", TruckMap.FROM_TRUCK_PAGE);
-				startActivity(i);
+				
+				//if things are still loading, show a progress dialog in the meantime
+				if(((NomadClientApplication)thisClass.getApplication()).loadingSchedule){
+					Log.v("loading schedule not done","yet");
+					
+					LoadWithProgressDialog lwpd = new LoadWithProgressDialog(thisClass,"Loading","Loading Schedule", new Runnable() {
+						public void run(){
+							while(((NomadClientApplication)thisClass.getApplication()).loadingSchedule){
+									try {
+										Thread.sleep(1000);
+									} catch (InterruptedException e) {
+										e.printStackTrace();
+									}
+							
+							}
+						}
+					},new Runnable() {
+						public void run(){
+							//start the menu class
+							Intent i= new Intent(thisClass, Schedule.class);
+							i.putExtra("truckIndex",truckIndex);
+							startActivity(i); 
+						}
+					});
+					lwpd.execute();
+				}else{
+					//start the menu class
+					Intent i = new Intent(thisClass, Schedule.class);  
+					i.putExtra("truckIndex",truckIndex);
+					startActivity(i); 
+				}
+				
+				
+				
+				
+				
 			}
 		});
 

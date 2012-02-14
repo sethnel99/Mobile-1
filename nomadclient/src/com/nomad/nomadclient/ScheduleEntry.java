@@ -4,12 +4,14 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class ScheduleEntry {
+	String ParseID;
 	int dayOfWeek;
 	int time;
 	String location;
 	boolean isASectionDivider;
 
-	public ScheduleEntry(int dow, int t, String l){
+	public ScheduleEntry(String id, int dow, int t, String l){
+		ParseID = id;
 		dayOfWeek = dow;
 		time = t;
 		location = l;

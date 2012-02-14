@@ -17,7 +17,7 @@ public class FoodTruck {
 	public BitmapDrawable logo; //the truc's logo
 
 	public FoodTruck(String id, String n, String l, String d, String s,String firstMessage, BitmapDrawable pic){
-		id = parseID;
+		parseID = id;
 		name = n;
 		location = l;
 		descriptor = d;
@@ -26,27 +26,14 @@ public class FoodTruck {
 		messages = new ArrayList<String>();
 		schedule = new ArrayList<ScheduleEntry>();
 		
+		//insert schedule's day dividers
 		schedule.add(new ScheduleEntry(0));
-		schedule.add(new ScheduleEntry(0,720,"West Jackson and Wells St."));
-		schedule.add(new ScheduleEntry(0,760,"720 E. Monroe St."));
 		schedule.add(new ScheduleEntry(1));
-		schedule.add(new ScheduleEntry(1,720,"West Jackson and Wells St."));
-		schedule.add(new ScheduleEntry(1,760,"720 E. Monroe St."));
 		schedule.add(new ScheduleEntry(2));
-		schedule.add(new ScheduleEntry(2,720,"West Jackson and Wells St."));
-		schedule.add(new ScheduleEntry(2,760,"720 E. Monroe St."));
 		schedule.add(new ScheduleEntry(3));
-		schedule.add(new ScheduleEntry(3,720,"West Jackson and Wells St."));
-		schedule.add(new ScheduleEntry(3,760,"720 E. Monroe St."));
 		schedule.add(new ScheduleEntry(4));
-		schedule.add(new ScheduleEntry(4,720,"West Jackson and Wells St."));
-		schedule.add(new ScheduleEntry(4,760,"720 E. Monroe St."));
 		schedule.add(new ScheduleEntry(5));
-		schedule.add(new ScheduleEntry(5,720,"West Jackson and Wells St."));
-		schedule.add(new ScheduleEntry(5,760,"720 E. Monroe St."));
 		schedule.add(new ScheduleEntry(6));
-		schedule.add(new ScheduleEntry(6,720,"West Jackson and Wells St."));
-		schedule.add(new ScheduleEntry(6,760,"720 E. Monroe St."));
 		
 		logo = pic;
 		if(firstMessage != null)

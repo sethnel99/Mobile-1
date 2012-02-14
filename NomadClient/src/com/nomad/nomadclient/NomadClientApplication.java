@@ -20,10 +20,15 @@ import com.parse.ParseQuery;
 
 public class NomadClientApplication extends Application{
 	private  ArrayList<FoodTruck> trucks; //all of the food trucks 
-	public int loadingInBackground = 0;
+	public boolean loadingMenu;
+	public boolean loadingMessages;
+	public boolean loadingSchedule;
 
 	public NomadClientApplication(){
 		trucks = new ArrayList<FoodTruck>();
+		loadingMenu = false;
+		loadingMessages = false;
+		loadingSchedule = false;
 	}
 
 	//accesssor methods for activities
@@ -49,14 +54,14 @@ public class NomadClientApplication extends Application{
 			for(int i = 0; i < parseData.size(); i++){
 				ParseObject temp = parseData.get(i);
 
-				String parseID = (String)temp.getObjectId();
+				String parseID = temp.getObjectId();
 				String name = temp.getString("Name");
-				Log.v("new truck from parse",name);
-				String description = temp.getString("Sescription");
+				Log.v("new truck from parse",name + " " + parseID);
+				String description = temp.getString("Description");
 				String locationString = temp.getString("LocationString");
 				ParseGeoPoint pgeo = temp.getParseGeoPoint("Location");
 				GeoPoint location = new GeoPoint((int)(pgeo.getLatitude()*Math.pow(10,6)),(int)(pgeo.getLongitude()*Math.pow(10,6)));
-				
+
 				//get logo file, convert logo file into a drawable
 				ParseFile pf = (ParseFile)temp.get("Logo");
 				byte[] logoFile = pf.getData();
@@ -85,6 +90,8 @@ public class NomadClientApplication extends Application{
 
 	public void loadTruckLists(int truckIndex){
 		//Gets the truck in question, and resets its menu and messages
+		
+		
 		FoodTruck ft = trucks.get(truckIndex);
 		ft.menu = new ArrayList<MenuFoodItem>();
 		ft.messages = new ArrayList<String>();
@@ -92,21 +99,22 @@ public class NomadClientApplication extends Application{
 
 		//sets up and executes the query to find all of the messages in the background
 		ParseQuery queryMessages = new ParseQuery("Messages");
+		queryMessages.whereEqualTo("TruckID",ft.parseID);
 		queryMessages.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);
 		queryMessages.setLimit(10);
-		loadingInBackground++;
+		loadingMessages = true;
 		queryMessages.findInBackground(new MyFindCallback(truckIndex) {
 			public void done(List<ParseObject> parseData, ParseException e) {
 				if (e == null) {
 					for(int i = 0; i < parseData.size(); i++){
 						ParseObject temp = parseData.get(i);
 						trucks.get(truckIndex).messages.add(temp.getString("Message"));
-						Log.v("got message item",temp.getString("Message"));
+						Log.v("got message item",temp.getString("Message") + " " + temp.getString("TruckID"));
 					}
 				} else {
 					Log.d("Parse", "Error: " + e.getMessage());
 				}
-				loadingInBackground--;
+				loadingMessages = false;
 			}
 		});
 
@@ -115,7 +123,7 @@ public class NomadClientApplication extends Application{
 		queryMenu.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);
 		queryMenu.whereEqualTo("TruckID",ft.parseID);
 
-		loadingInBackground++;
+		loadingMenu = true;
 		queryMenu.findInBackground(new MyFindCallback(truckIndex) {
 			public void done(List<ParseObject> parseData, ParseException e) {
 				if (e == null) {
@@ -127,7 +135,7 @@ public class NomadClientApplication extends Application{
 						String id = temp.getObjectId();
 						String name = temp.getString("Name");	
 						double price = temp.getInt("Price");
-						
+
 						//get logo file, convert logo file into a drawable
 						ParseFile pf;
 						byte[] logoFile = null;
@@ -140,7 +148,7 @@ public class NomadClientApplication extends Application{
 						ByteArrayInputStream is = new ByteArrayInputStream(logoFile);
 						Bitmap bitmapPic = BitmapFactory.decodeStream(is);
 
-						Log.v("got menu item",name);
+						Log.v("got menu item",name+ " " + temp.getString("TruckID"));
 						trucks.get(truckIndex).menu.add(new MenuFoodItem(id,name,price,new BitmapDrawable(bitmapPic)));
 					}
 
@@ -148,7 +156,39 @@ public class NomadClientApplication extends Application{
 					Log.d("Parse", "Error: " + e.getMessage());
 				}
 
-				loadingInBackground--;
+				loadingMenu = false;
+			}
+		});
+		
+		
+		//Sets up and executes the query to find all schedule entries which belong to that truck
+		ParseQuery querySchedule = new ParseQuery("ScheduleEntry");
+		querySchedule.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);
+		querySchedule.whereEqualTo("TruckID",ft.parseID);
+
+		loadingSchedule = true;
+		querySchedule.findInBackground(new MyFindCallback(truckIndex) {
+			public void done(List<ParseObject> parseData, ParseException e) {
+				if (e == null) {
+
+					//For each menu item, create a ScheduleEntry object and add it to that trucks menu
+					for(int i = 0; i < parseData.size(); i++){
+						ParseObject temp = parseData.get(i);
+
+						String id = temp.getObjectId();
+						String location = temp.getString("Location");	
+						int dow = temp.getInt("DayOfWeek");
+						int time = temp.getInt("Time");
+
+						
+						trucks.get(truckIndex).schedule.add(new ScheduleEntry(id,dow,time,location));
+					}
+
+				} else {
+					Log.d("Parse", "Error: " + e.getMessage());
+				}
+
+				loadingSchedule = false;
 			}
 		});
 

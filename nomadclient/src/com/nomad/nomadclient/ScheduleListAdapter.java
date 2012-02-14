@@ -69,7 +69,6 @@ public class ScheduleListAdapter extends ArrayAdapter<ScheduleEntry>{
 	
 	@Override 
 	public int getItemViewType(int position){
-		Log.v("getitemviewtype",""+position);
 		if(schedule.get(position).isASectionDivider)
 			return 1;
 		else 
