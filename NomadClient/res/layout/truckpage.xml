@@ -116,7 +116,6 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
-                    android:text="&apos;The cluck has landed Hyde Park. AT 57th and Ellis (across the library)&apos;"
                     android:textColor="#000000" />
             </LinearLayout>
 

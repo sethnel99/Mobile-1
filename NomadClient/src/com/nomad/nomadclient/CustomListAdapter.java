@@ -212,12 +212,12 @@ public class CustomListAdapter extends BaseAdapter{
 
 	@Override
 	public Object getItem(int position) {
-		return items.get(position-1);
+		return items.get(position);
 	}
-
+	
 	@Override
 	public long getItemId(int position) {
-		return position-1;
+		return 0;
 	}
 
 	private class MyCustomFilter extends Filter{
@@ -279,6 +279,8 @@ public class CustomListAdapter extends BaseAdapter{
 			}
 		}
 	}
+
+
 
 }
 

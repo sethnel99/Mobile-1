@@ -30,6 +30,7 @@ public class TruckPage extends Activity{
 		((TextView)findViewById(R.id.titleTextView)).setText(foodTruck.name);
 		((TextView)findViewById(R.id.descriptTextView)).setText(foodTruck.descriptor);
 		((ImageView)findViewById(R.id.truckLogoImageView)).setImageDrawable(foodTruck.logo);
+		((TextView)findViewById(R.id.latestMessageText)).setText(foodTruck.messages.get(0));
 
 		//begin loading the truck's data in the background, if you need to 
 		if(foodTruck.menu.size() == 0)

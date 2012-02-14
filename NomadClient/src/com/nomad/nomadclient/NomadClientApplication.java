@@ -36,6 +36,7 @@ public class NomadClientApplication extends Application{
 		trucks = new ArrayList<FoodTruck>();
 		//Query the "Trucks" class
 		ParseQuery query = new ParseQuery("Trucks");
+		query.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);
 		Log.v("PARSE IS STARTING","parse!");
 
 		//execute the query
@@ -64,6 +65,7 @@ public class NomadClientApplication extends Application{
 
 				//grab the first message for each truck as well, so save load time later
 				ParseQuery queryFirstMessage = new ParseQuery("Messages");
+				queryFirstMessage.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);
 				queryFirstMessage.whereEqualTo("TruckID",parseID);
 				queryFirstMessage.orderByDescending("createdAt");
 
@@ -90,6 +92,7 @@ public class NomadClientApplication extends Application{
 
 		//sets up and executes the query to find all of the messages in the background
 		ParseQuery queryMessages = new ParseQuery("Messages");
+		queryMessages.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);
 		queryMessages.setLimit(10);
 		loadingInBackground++;
 		queryMessages.findInBackground(new MyFindCallback(truckIndex) {
@@ -109,6 +112,7 @@ public class NomadClientApplication extends Application{
 
 		//Sets up and executes the query to find all menu items which belong to that truck
 		ParseQuery queryMenu = new ParseQuery("MenuItems");
+		queryMenu.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);
 		queryMenu.whereEqualTo("TruckID",ft.parseID);
 
 		loadingInBackground++;
