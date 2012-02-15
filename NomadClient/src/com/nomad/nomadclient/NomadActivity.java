@@ -61,7 +61,7 @@ public class NomadActivity extends ListActivity{
 				//get the trucks from the global array
 				ArrayList<FoodTruck> trucks =((NomadClientApplication)thisClass.getApplication()).getTrucks();
 				//set up the adapter
-				mListAdapter = new FoodTruckListAdapter(getApplicationContext(), trucks);
+				mListAdapter = new FoodTruckListAdapter(getApplication(), trucks);
 				setListAdapter(mListAdapter);
 				mListView.setTextFilterEnabled(true);
 				

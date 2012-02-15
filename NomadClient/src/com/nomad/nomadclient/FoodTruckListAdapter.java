@@ -3,7 +3,6 @@ package com.nomad.nomadclient;
 import java.util.ArrayList;
 
 import android.content.Context;
-import android.util.Log;
 
 public class FoodTruckListAdapter extends CustomListAdapter{
 	public static int MENU = 0;
@@ -24,9 +23,9 @@ public class FoodTruckListAdapter extends CustomListAdapter{
 		for(int i = 0; i < a.size(); i++){
 			temp = new Object[4];
 			tempft = a.get(i);
-			temp[0] = String.valueOf(tempft.calculateDistance());
+			temp[0] = String.format("%.1f",((NomadClientApplication)c).getDistanceFrom(tempft.location));
 			temp[1] = tempft.name;
-			temp[2] = tempft.location;
+			temp[2] = tempft.locationString;
 			temp[3] = ""+i;
 			items.add(temp);
 			searchFields.add(tempft.searchString);

@@ -8,9 +8,9 @@
     
     <TextView 
         	android:id="@+id/distanceText"
-            android:layout_width="70dp"
+            android:layout_width="100dp"
    			android:layout_height="70dp"
-   			android:text="0.1"
+   			android:text=""
    			android:textSize="50dp"
    			android:layout_alignParentLeft="true"
    			android:layout_marginRight="15dp"

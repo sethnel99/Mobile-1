@@ -5,11 +5,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Application;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
-import android.text.Editable;
-import android.text.TextWatcher;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.os.Bundle;
 import android.util.Log;
 
 import com.google.android.maps.GeoPoint;
@@ -25,6 +28,9 @@ public class NomadClientApplication extends Application{
 	public static int CACHE_FIRST = 1;
 
 	private  ArrayList<FoodTruck> trucks; //all of the food trucks 
+	private LocationManager locationManager;
+	private MyLocationListener locationListener;
+	
 	public boolean loadingMenu;
 	public boolean loadingMessages;
 	public boolean loadingSchedule;
@@ -34,6 +40,15 @@ public class NomadClientApplication extends Application{
 		loadingMenu = false;
 		loadingMessages = false;
 		loadingSchedule = false;
+
+	}
+	
+	@Override
+	public void onCreate(){
+		locationManager = (LocationManager)this.getSystemService(Context.LOCATION_SERVICE);
+		locationListener = new MyLocationListener();
+		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+		locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
 	}
 
 	//accesssor methods for activities
@@ -89,7 +104,7 @@ public class NomadClientApplication extends Application{
 				queryFirstMessage.orderByDescending("createdAt");
 
 				ParseObject firstMessage = queryFirstMessage.getFirst();
-				trucks.add(new FoodTruck(parseID, name,locationString,description,name,firstMessage.getString("Message"),new BitmapDrawable(bitmapLogo)));
+				trucks.add(new FoodTruck(parseID, name,locationString,location,description,name,firstMessage.getString("Message"),new BitmapDrawable(bitmapLogo)));
 
 			}
 
@@ -258,7 +273,18 @@ public class NomadClientApplication extends Application{
 
 
 	}
-
+	
+	public double getDistanceFrom(GeoPoint gp){
+		Location currentLoc = locationListener.getLocation();
+		
+	    double lat = ((double)gp.getLatitudeE6()) / 1e6;
+	    double lng = ((double)gp.getLongitudeE6()) / 1e6;
+	    Location gpLoc = new Location(currentLoc);
+	    gpLoc.setLatitude(lat);
+	    gpLoc.setLongitude(lng);
+	    return currentLoc.distanceTo(gpLoc);
+	}
+	
 
 	private abstract class MyFindCallback extends FindCallback{
 		int truckIndex;
@@ -268,7 +294,105 @@ public class NomadClientApplication extends Application{
 			truckIndex = i;
 		}
 	}
+	
+	
+	private class MyLocationListener implements LocationListener{
+		Location currentBestLocation;
+		
+		public MyLocationListener(){
+			currentBestLocation = locationManager.getLastKnownLocation(locationManager.GPS_PROVIDER);
+			Location l2 = locationManager.getLastKnownLocation(locationManager.NETWORK_PROVIDER);
+			if(isBetterLocation(l2))
+					currentBestLocation = l2;
+		}
+		
+		public Location getLocation(){
+			return  currentBestLocation;
+		}
+		
+		@Override 
+		public void onLocationChanged(Location location){
+			if(isBetterLocation(location))
+				currentBestLocation = location;
+		}
 
+		@Override
+		public void onProviderDisabled(String arg0) {
+			
+			
+		}
+
+		@Override
+		public void onProviderEnabled(String provider) {
+			
+			
+		}
+
+		@Override
+		public void onStatusChanged(String provider, int status, Bundle extras) {
+			
+			
+		}
+		
+		//taken from example android docs
+		private boolean isBetterLocation(Location location){
+			  if (currentBestLocation == null) {
+			        // A new location is always better than no location
+			        return true;
+			    }
+
+			    // Check whether the new location fix is newer or older
+			    long timeDelta = location.getTime() - currentBestLocation.getTime();
+			    boolean isSignificantlyNewer = timeDelta > 1000*4*60;
+			    boolean isSignificantlyOlder = timeDelta < -1000*4*60;
+			    boolean isNewer = timeDelta > 0;
+
+			    // If it's been more than two minutes since the current location, use the new location
+			    // because the user has likely moved
+			    if (isSignificantlyNewer) {
+			        return true;
+			    // If the new location is more than two minutes older, it must be worse
+			    } else if (isSignificantlyOlder) {
+			        return false;
+			    }
+
+			    // Check whether the new location fix is more or less accurate
+			    int accuracyDelta = (int) (location.getAccuracy() - currentBestLocation.getAccuracy());
+			    boolean isLessAccurate = accuracyDelta > 0;
+			    boolean isMoreAccurate = accuracyDelta < 0;
+			    boolean isSignificantlyLessAccurate = accuracyDelta > 200;
+
+			    // Check if the old and new location are from the same provider
+			    boolean isFromSameProvider = isSameProvider(location.getProvider(),
+			            currentBestLocation.getProvider());
+
+			    // Determine location quality using a combination of timeliness and accuracy
+			    if (isMoreAccurate) {
+			        return true;
+			    } else if (isNewer && !isLessAccurate) {
+			        return true;
+			    } else if (isNewer && !isSignificantlyLessAccurate && isFromSameProvider) {
+			        return true;
+			    }
+			    return false;
+			 
+			 
+			 
+			 
+			
+			
+		}
+		
+		/** Checks whether two providers are the same */
+		private boolean isSameProvider(String provider1, String provider2) {
+		    if (provider1 == null) {
+		      return provider2 == null;
+		    }
+		    return provider1.equals(provider2);
+		}
+		
+		
+	}
 
 
 }
