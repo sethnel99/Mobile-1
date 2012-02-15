@@ -18,6 +18,10 @@ public class Menu extends ListActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.menu);
         
+        //if the activity resumes and the global data has been garbage collected, finish()
+        if(((NomadClientApplication)this.getApplication()).getTrucks().size() == 0)
+        	finish();
+        
         
         
         //if they click the back button, finish the activity

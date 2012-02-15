@@ -19,6 +19,9 @@ public class Schedule extends ListActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.schedule);
         
+        //if the activity resumes and the global data has been garbage collected, finish()
+        if(((NomadClientApplication)this.getApplication()).getTrucks().size() == 0)
+        	finish();
         
         
         //if they click the back button, finish the activity
@@ -35,6 +38,7 @@ public class Schedule extends ListActivity{
         //fetch the foodtruck who's menu will be shown
         int truckIndex = getIntent().getExtras().getInt("truckIndex");
         foodTruck = ((NomadClientApplication)this.getApplication()).getTrucks().get(truckIndex); 
+        
  
         ((TextView)findViewById(R.id.schedulePrompt)).setText(foodTruck.name + "'s Schedule");
 

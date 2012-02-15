@@ -1,5 +1,7 @@
 package com.nomad.nomadclient;
 
+import com.parse.Parse;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
@@ -21,7 +23,14 @@ public class TruckPage extends Activity{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.truckpage);
 
-		//Grab the truck index (given as an extra) and get the trck
+		//If the process was killed and then restarted here, get the trucks from the cache
+		if(((NomadClientApplication)this.getApplication()).getTrucks().size() == 0){
+			Parse.initialize(this, "FoX2hKFWtiUIWgt2mioFIJvwdwgy461XAS7n367S", "EU6d1ccuc3rUiW09IXqnLGF8XNngazVCWZDvSfC1"); 
+			((NomadClientApplication)this.getApplication()).loadTrucksFromParse(NomadClientApplication.CACHE_FIRST);
+		}
+
+
+		//Grab the truck index (given as an extra) and get the truck
 		Bundle b = this.getIntent().getExtras();
 		truckIndex = b.getInt("truckIndex");
 		foodTruck = ((NomadClientApplication)this.getApplication()).getTrucks().get(truckIndex);
@@ -34,7 +43,7 @@ public class TruckPage extends Activity{
 
 		//begin loading the truck's data in the background, if you need to 
 		if(foodTruck.menu.size() == 0)
-			((NomadClientApplication)thisClass.getApplication()).loadTruckLists(truckIndex);
+			((NomadClientApplication)thisClass.getApplication()).loadTruckLists(truckIndex, NomadClientApplication.NETWORK_FIRST);
 
 
 
@@ -84,26 +93,7 @@ public class TruckPage extends Activity{
 				//if things are still loading, show a progress dialog in the meantime
 				if(((NomadClientApplication)thisClass.getApplication()).loadingMenu){
 					Log.v("loading menu not done","yet");
-					
-					LoadWithProgressDialog lwpd = new LoadWithProgressDialog(thisClass,"Loading","Loading Menu", new Runnable() {
-						public void run(){
-							while(((NomadClientApplication)thisClass.getApplication()).loadingMenu){
-									try {
-										Thread.sleep(1000);
-									} catch (InterruptedException e) {
-										e.printStackTrace();
-									}
-							
-							}
-						}
-					},new Runnable() {
-						public void run(){
-							//start the menu class
-							Intent i= new Intent(thisClass, Menu.class);
-							i.putExtra("truckIndex",truckIndex);
-							startActivity(i); 
-						}
-					});
+					BackgroundLoader lwpd = new BackgroundLoader(thisClass,sleepWhileMenuLoads,openMenu,"Loading","Loading Menu");
 					lwpd.execute();
 				}else{
 					//start the menu class
@@ -114,37 +104,18 @@ public class TruckPage extends Activity{
 
 			}
 		});
+	
 
-
-		//What to do if they click the schedule "button"
+		//What to do if they click the schedule "button"////////////////////////
 		RelativeLayout scheduleViewButton = (RelativeLayout)findViewById(R.id.scheduleButtonView);
 		scheduleViewButton.setOnClickListener(new View.OnClickListener(){
 			public void onClick(View v) {
 				Log.v("clicked schedule button","clicked schedule button");
-				
+
 				//if things are still loading, show a progress dialog in the meantime
 				if(((NomadClientApplication)thisClass.getApplication()).loadingSchedule){
 					Log.v("loading schedule not done","yet");
-					
-					LoadWithProgressDialog lwpd = new LoadWithProgressDialog(thisClass,"Loading","Loading Schedule", new Runnable() {
-						public void run(){
-							while(((NomadClientApplication)thisClass.getApplication()).loadingSchedule){
-									try {
-										Thread.sleep(1000);
-									} catch (InterruptedException e) {
-										e.printStackTrace();
-									}
-							
-							}
-						}
-					},new Runnable() {
-						public void run(){
-							//start the menu class
-							Intent i= new Intent(thisClass, Schedule.class);
-							i.putExtra("truckIndex",truckIndex);
-							startActivity(i); 
-						}
-					});
+					BackgroundLoader lwpd = new BackgroundLoader(thisClass,sleepWhileScheduleLoads,openSchedule,"Loading","Loading Schedule");
 					lwpd.execute();
 				}else{
 					//start the menu class
@@ -152,15 +123,65 @@ public class TruckPage extends Activity{
 					i.putExtra("truckIndex",truckIndex);
 					startActivity(i); 
 				}
-				
-				
-				
-				
-				
+
+
+
+
+
 			}
 		});
+		///////////////////////////////////////////////////
 
 
 	}
+
+	///////////////////////define a bunch of runnables to keep code uncluttered////////////////
+	Runnable sleepWhileMenuLoads = new Runnable() {
+		public void run(){
+			while(((NomadClientApplication)thisClass.getApplication()).loadingMenu){
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+
+			}
+		}
+	};
+
+	Runnable sleepWhileScheduleLoads = new Runnable() {
+		public void run(){
+			while(((NomadClientApplication)thisClass.getApplication()).loadingSchedule){
+				try {
+					Thread.sleep(1000);				
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+
+			}
+		}
+	};
+
+	Runnable openMenu = new Runnable() {
+		public void run(){
+			//start the menu class
+			Intent i= new Intent(thisClass, Menu.class);
+			i.putExtra("truckIndex",truckIndex);
+			startActivity(i); 
+		}
+	};
+
+	Runnable openSchedule = new Runnable() {
+		public void run(){
+			//start the menu class
+			Intent i= new Intent(thisClass, Schedule.class);
+			i.putExtra("truckIndex",truckIndex);
+			startActivity(i); 
+		}
+	};
+
+
+
+
 
 }

@@ -52,9 +52,9 @@ public class NomadActivity extends ListActivity{
 		Parse.initialize(this, "FoX2hKFWtiUIWgt2mioFIJvwdwgy461XAS7n367S", "EU6d1ccuc3rUiW09IXqnLGF8XNngazVCWZDvSfC1"); 
 		
 		//load all of the trucks from parse
-		LoadWithProgressDialog lwpd = new LoadWithProgressDialog(this,"Loading","Loading Truck Data", new Runnable() {
+		BackgroundLoader lwpd = new BackgroundLoader(this, new Runnable() {
 			public void run(){
-				((NomadClientApplication)thisClass.getApplication()).loadTrucksFromParse();
+				((NomadClientApplication)thisClass.getApplication()).loadTrucksFromParse(NomadClientApplication.NETWORK_FIRST);
 			}
 		}, new Runnable(){
 			public void run(){
@@ -75,7 +75,7 @@ public class NomadActivity extends ListActivity{
 				}); 
 				
 			}
-		});
+		},"Loading","Loading Truck Data");
 		lwpd.execute();
 		
 	
