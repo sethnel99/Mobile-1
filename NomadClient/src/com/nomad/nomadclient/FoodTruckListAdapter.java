@@ -23,7 +23,11 @@ public class FoodTruckListAdapter extends CustomListAdapter{
 		for(int i = 0; i < a.size(); i++){
 			temp = new Object[4];
 			tempft = a.get(i);
-			temp[0] = String.format("%.1f",((NomadClientApplication)c).getDistanceFrom(tempft.location));
+			double dist = ((NomadClientApplication)c).getDistanceFrom(tempft.location);
+			if(dist < 100) //to make sure the distance isn't too long to display in its alloted space
+				temp[0] = String.format("%.1f",dist);
+			else
+				temp[0] = ">100";
 			temp[1] = tempft.name;
 			temp[2] = tempft.locationString;
 			temp[3] = ""+i;

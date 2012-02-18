@@ -282,7 +282,7 @@ public class NomadClientApplication extends Application{
 	    Location gpLoc = new Location(currentLoc);
 	    gpLoc.setLatitude(lat);
 	    gpLoc.setLongitude(lng);
-	    return currentLoc.distanceTo(gpLoc);
+	    return currentLoc.distanceTo(gpLoc)/1000 * 0.621371192; //convert from meters to km to miles
 	}
 	
 
@@ -312,6 +312,7 @@ public class NomadClientApplication extends Application{
 		
 		@Override 
 		public void onLocationChanged(Location location){
+			
 			if(isBetterLocation(location))
 				currentBestLocation = location;
 		}
