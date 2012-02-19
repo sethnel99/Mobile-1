@@ -55,6 +55,16 @@ public class TruckMap extends MapActivity {
 		
 		trucks = ((NomadClientApplication)this.getApplication()).getTrucks();
         
+		if(trucks.size() == 0)
+			return;
+		
+		//Grab the truck index (given as an extra) and get the truck
+		Bundle b = this.getIntent().getExtras();
+		int startIndex = -1;
+		if(b.containsKey("truckIndex"))
+		 startIndex = b.getInt("truckIndex");
+
+		
 		 
         mapView = (MapView) findViewById(R.id.mapview);
 		mapView.setBuiltInZoomControls(true);
@@ -65,12 +75,33 @@ public class TruckMap extends MapActivity {
 		drawable = getResources().getDrawable(R.drawable.truckpin);
 		itemizedOverlay = new CustomItemizedOverlay<OverlayItem>(drawable, mapView);
 		
+		
+		
 		OverlayItem tempOverlayItem;
-		FoodTruck tempTruck;
+		FoodTruck tempTruck = trucks.get(0);
+		
+		int minLat = tempTruck.location.getLatitudeE6();
+		int maxLat = minLat;
+		int minLong = tempTruck.location.getLongitudeE6();
+		int maxLong = minLong;
+		int tempLat;
+		int tempLong;
 		for(int i = 0; i < trucks.size(); i++){
 			tempTruck = trucks.get(i);
 			tempOverlayItem = new OverlayItem(tempTruck.location,tempTruck.name,tempTruck.descriptor);
 			itemizedOverlay.addOverlay(tempOverlayItem);
+			
+			tempLat = tempTruck.location.getLatitudeE6();
+			tempLong = tempTruck.location.getLongitudeE6();
+			if(tempLat < minLat)
+				minLat = tempLat;
+			if(tempLat > maxLat)
+				maxLat = tempLat;
+			if(tempLong < minLong)
+				minLong = tempLong;
+			if(tempLong > maxLong)
+				maxLong = tempLong;
+			
 		
 		}
 		
@@ -78,9 +109,13 @@ public class TruckMap extends MapActivity {
 	
 		
 		final MapController mc = mapView.getController();
-		mc.animateTo(trucks.get(0).location);
-		mc.setZoom(16);
+
+		mc.zoomToSpan(maxLat-minLat, maxLong-minLong);
 		
+		if(startIndex == -1)
+			mc.animateTo(new GeoPoint((minLat+maxLat)/2,(minLong+maxLong)/2));
+		else
+			mc.animateTo(trucks.get(startIndex).location);
 		
 		
 		

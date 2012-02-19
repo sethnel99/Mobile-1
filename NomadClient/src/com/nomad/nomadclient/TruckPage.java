@@ -42,7 +42,7 @@ public class TruckPage extends Activity{
 		((TextView)findViewById(R.id.latestMessageText)).setText(foodTruck.messages.get(0));
 
 		//begin loading the truck's data in the background, if you need to 
-		if(foodTruck.menu.size() == 0)
+		if(!foodTruck.hasLoaded)
 			((NomadClientApplication)thisClass.getApplication()).loadTruckLists(truckIndex, NomadClientApplication.NETWORK_FIRST);
 
 
@@ -79,6 +79,7 @@ public class TruckPage extends Activity{
 				//start the map activity
 				Intent i = new Intent(thisClass, TruckMap.class);   
 				i.putExtra("fromPage", TruckMap.FROM_TRUCK_PAGE);
+				i.putExtra("TruckIndex",truckIndex);
 				startActivity(i);
 			}
 		});
@@ -91,7 +92,7 @@ public class TruckPage extends Activity{
 				Log.v("menu button pressed","yes");
 
 				//if things are still loading, show a progress dialog in the meantime
-				if(((NomadClientApplication)thisClass.getApplication()).loadingMenu){
+				if(foodTruck.loadingMenu){
 					Log.v("loading menu not done","yet");
 					BackgroundLoader lwpd = new BackgroundLoader(thisClass,sleepWhileMenuLoads,openMenu,"Loading","Loading Menu");
 					lwpd.execute();
@@ -113,7 +114,7 @@ public class TruckPage extends Activity{
 				Log.v("clicked schedule button","clicked schedule button");
 
 				//if things are still loading, show a progress dialog in the meantime
-				if(((NomadClientApplication)thisClass.getApplication()).loadingSchedule){
+				if(foodTruck.loadingSchedule){
 					Log.v("loading schedule not done","yet");
 					BackgroundLoader lwpd = new BackgroundLoader(thisClass,sleepWhileScheduleLoads,openSchedule,"Loading","Loading Schedule");
 					lwpd.execute();
@@ -138,7 +139,7 @@ public class TruckPage extends Activity{
 	///////////////////////define a bunch of runnables to keep code uncluttered////////////////
 	Runnable sleepWhileMenuLoads = new Runnable() {
 		public void run(){
-			while(((NomadClientApplication)thisClass.getApplication()).loadingMenu){
+			while(foodTruck.loadingMenu){
 				try {
 					Thread.sleep(1000);
 				} catch (InterruptedException e) {
@@ -151,7 +152,7 @@ public class TruckPage extends Activity{
 
 	Runnable sleepWhileScheduleLoads = new Runnable() {
 		public void run(){
-			while(((NomadClientApplication)thisClass.getApplication()).loadingSchedule){
+			while(foodTruck.loadingSchedule){
 				try {
 					Thread.sleep(1000);				
 				} catch (InterruptedException e) {

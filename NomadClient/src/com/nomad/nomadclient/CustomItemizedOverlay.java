@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 
 import com.google.android.maps.MapView;
 import com.google.android.maps.OverlayItem;
@@ -54,6 +55,7 @@ public class CustomItemizedOverlay<Item extends OverlayItem> extends BalloonItem
 	@Override
 	protected boolean onBalloonTap(int index, OverlayItem item) {
 		Intent i = new Intent(c,TruckPage.class);
+		i.putExtra("truckIndex",index);
 		c.startActivity(i);
 		return true;
 	}

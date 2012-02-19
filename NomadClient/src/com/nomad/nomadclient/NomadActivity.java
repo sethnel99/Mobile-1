@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.app.ListActivity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -22,7 +23,7 @@ public class NomadActivity extends ListActivity{
 	EditText searchBar; //the editbox used to filter the list
 	FoodTruckListAdapter mListAdapter; //the adapter used to populate the listview
 	Activity thisClass = this;
-	
+
 
 
 	/** Called when the activity is first created. */
@@ -34,8 +35,8 @@ public class NomadActivity extends ListActivity{
 		//initialize view variables
 		mListView = this.getListView();
 		searchBar = (EditText)findViewById(R.id.searchEditText);
-		
-		
+
+
 		//What to do if they click the map button
 		Button mapButton = (Button)findViewById(R.id.mapButton);
 		mapButton.setOnClickListener(new View.OnClickListener(){
@@ -50,7 +51,7 @@ public class NomadActivity extends ListActivity{
 
 		//start up parse
 		Parse.initialize(this, "FoX2hKFWtiUIWgt2mioFIJvwdwgy461XAS7n367S", "EU6d1ccuc3rUiW09IXqnLGF8XNngazVCWZDvSfC1"); 
-		
+
 		//load all of the trucks from parse
 		BackgroundLoader lwpd = new BackgroundLoader(this, new Runnable() {
 			public void run(){
@@ -64,7 +65,7 @@ public class NomadActivity extends ListActivity{
 				mListAdapter = new FoodTruckListAdapter(getApplication(), trucks);
 				setListAdapter(mListAdapter);
 				mListView.setTextFilterEnabled(true);
-				
+
 				//set up the search bar to detect when its text has changed and filter the results
 				searchBar.addTextChangedListener(new TextWatcher(){
 					public void afterTextChanged(Editable s) {}
@@ -73,18 +74,18 @@ public class NomadActivity extends ListActivity{
 						mListAdapter.getFilter().filter(s);
 					}
 				}); 
-				
+
 			}
 		},"Loading","Loading Truck Data");
 		lwpd.execute();
-		
-	
-	
 
 
-		
-		
-		
+
+
+
+
+
+
 
 	}
 
@@ -92,14 +93,48 @@ public class NomadActivity extends ListActivity{
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
-		
+
 		//determine the actual index of the truck clicked in the global ArrayList
 		TextView globalPositionText = (TextView)v.findViewById(R.id.globalPosition);
 		int truckIndex = Integer.valueOf((String)globalPositionText.getText());
-		
+
 		//start the truck page activity for that truck
 		Intent i = new Intent(this, TruckPage.class);   
 		i.putExtra("truckIndex",truckIndex);
 		startActivity(i); 
+	}
+
+	public class FoodTruckListAdapter extends CustomListAdapter{
+
+		//passing in an entire list of trucks, will create an adapter for the truck list
+		public FoodTruckListAdapter(Context c, ArrayList<FoodTruck> a){
+			super(c);
+			int rowID = R.layout.truckrow;
+			int[] viewIDs = {R.id.distanceText, R.id.nameText, R.id.locationText, R.id.globalPosition};
+			int[] viewTypes = {TEXTVIEW, TEXTVIEW, TEXTVIEW, TEXTVIEW };
+
+			ArrayList<Object[]> items = new ArrayList<Object[]>();
+			ArrayList<String> searchFields =  new ArrayList<String>();
+
+			Object[] temp;
+			FoodTruck tempft;
+			for(int i = 0; i < a.size(); i++){
+				temp = new Object[4];
+				tempft = a.get(i);
+				double dist = ((NomadClientApplication)c).getDistanceFrom(tempft.location);
+				if(dist < 100) //to make sure the distance isn't too long to display in its alloted space
+					temp[0] = String.format("%.1f",dist);
+				else
+					temp[0] = ">100";
+				temp[1] = tempft.name;
+				temp[2] = tempft.locationString;
+				temp[3] = ""+i;
+				items.add(temp);
+				searchFields.add(tempft.searchString);
+				//Log.v("creating",""+items.get(i)[1] + ":"+searchFields[i]);
+			}
+
+			super.initAdapter(rowID, viewIDs, viewTypes, items, searchFields);	
+		}
 	}
 }

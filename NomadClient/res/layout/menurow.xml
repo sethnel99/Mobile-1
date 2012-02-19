@@ -20,7 +20,16 @@
         android:layout_toRightOf="@+id/foodPic"
         android:text="Chicken Empanada"
         android:textColor="#000000"
-        android:textSize="24dp" />
+        android:textSize="16dp" />
 
+    <TextView
+        android:id="@+id/menuItemPrice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:textColor="#000000"
+        android:textSize="24dp" 
+        android:layout_marginRight="2dp"/>
 
 </RelativeLayout>

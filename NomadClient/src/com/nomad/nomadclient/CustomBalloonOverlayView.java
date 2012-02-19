@@ -49,6 +49,15 @@ public class CustomBalloonOverlayView<Item extends OverlayItem> extends BalloonO
 		snippet = (TextView) v.findViewById(R.id.balloon_item_snippet);
 
 		
+		// implement balloon close
+		ImageView close = (ImageView) v.findViewById(R.id.balloon_close);
+		close.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				parent.setVisibility(GONE);
+			}
+		});
+
+		
 	}
 
 	@Override

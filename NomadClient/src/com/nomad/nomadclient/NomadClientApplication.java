@@ -2,7 +2,12 @@ package com.nomad.nomadclient;
 
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+
+import org.json.JSONArray;
+import org.json.JSONException;
 
 import android.app.Application;
 import android.content.Context;
@@ -30,19 +35,11 @@ public class NomadClientApplication extends Application{
 	private  ArrayList<FoodTruck> trucks; //all of the food trucks 
 	private LocationManager locationManager;
 	private MyLocationListener locationListener;
-	
-	public boolean loadingMenu;
-	public boolean loadingMessages;
-	public boolean loadingSchedule;
 
 	public NomadClientApplication(){
 		trucks = new ArrayList<FoodTruck>();
-		loadingMenu = false;
-		loadingMessages = false;
-		loadingSchedule = false;
-
 	}
-	
+
 	@Override
 	public void onCreate(){
 		locationManager = (LocationManager)this.getSystemService(Context.LOCATION_SERVICE);
@@ -97,6 +94,20 @@ public class NomadClientApplication extends Application{
 				ByteArrayInputStream is = new ByteArrayInputStream(logoFile);
 				Bitmap bitmapLogo = BitmapFactory.decodeStream(is);
 
+				JSONArray categoriesJSON = temp.getJSONArray("MenuCategories");
+				//turn the categories JSONArray into an ArrayList
+				ArrayList<String> categories = new ArrayList<String>();     
+				int len = categoriesJSON.length();
+				for (int j=0;j<len;j++){ 
+					try {
+						categories.add(categoriesJSON.get(j).toString());
+					} catch (JSONException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+
+
 				//grab the first message for each truck as well, so save load time later
 				ParseQuery queryFirstMessage = new ParseQuery("Messages");
 				queryFirstMessage.setCachePolicy(cachePolicy);
@@ -104,15 +115,25 @@ public class NomadClientApplication extends Application{
 				queryFirstMessage.orderByDescending("createdAt");
 
 				ParseObject firstMessage = queryFirstMessage.getFirst();
-				trucks.add(new FoodTruck(parseID, name,locationString,location,description,name,firstMessage.getString("Message"),new BitmapDrawable(bitmapLogo)));
+				trucks.add(new FoodTruck(parseID, name,locationString,location,description,name,firstMessage.getString("Message"),new BitmapDrawable(bitmapLogo),categories));
 
 			}
+
 
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		Log.v("PARSE IS ENDING","parse!");
+
+		//sorts items based on the sort field
+		Collections.sort(trucks,new Comparator<FoodTruck>() {
+			//custom compare of Object[]s
+			public int compare(FoodTruck ft1, FoodTruck ft2) {
+				return (int) (getDistanceFrom(ft1.location)*10 - getDistanceFrom(ft2.location)*10);
+			}
+		});
+
 
 
 	}
@@ -128,16 +149,14 @@ public class NomadClientApplication extends Application{
 
 
 		FoodTruck ft = trucks.get(truckIndex);
-		ft.menu = new ArrayList<MenuFoodItem>();
-		ft.messages = new ArrayList<String>();
-
+		ft.hasLoaded = true;
 
 		//sets up and executes the query to find all of the messages in the background
 		ParseQuery queryMessages = new ParseQuery("Messages");
 		queryMessages.whereEqualTo("TruckID",ft.parseID);
 		queryMessages.setCachePolicy(cachePolicy);
 		queryMessages.setLimit(10);
-		loadingMessages = true;
+		ft.loadingMessages = true;
 		queryMessages.findInBackground(new MyFindCallback(truckIndex) {
 			public void done(List<ParseObject> parseData, ParseException e) {
 				if (e == null) {
@@ -154,7 +173,7 @@ public class NomadClientApplication extends Application{
 								Log.v("got message item",temp.getString("Message") + " " + temp.getString("TruckID"));
 							}
 
-							loadingMessages = false;
+							trucks.get(truckIndex).loadingMessages = false;
 
 						}
 
@@ -174,7 +193,7 @@ public class NomadClientApplication extends Application{
 		queryMenu.setCachePolicy(cachePolicy);
 		queryMenu.whereEqualTo("TruckID",ft.parseID);
 
-		loadingMenu = true;
+		ft.loadingMenu = true;
 
 		queryMenu.findInBackground(new MyFindCallback(truckIndex) {
 			public void done(List<ParseObject> parseData, ParseException e) {
@@ -192,6 +211,7 @@ public class NomadClientApplication extends Application{
 								String id = temp.getObjectId();
 								String name = temp.getString("Name");	
 								double price = temp.getInt("Price");
+								int category = temp.getInt("Category");
 
 								//get logo file, convert logo file into a drawable
 								ParseFile pf;
@@ -206,11 +226,11 @@ public class NomadClientApplication extends Application{
 								Bitmap bitmapPic = BitmapFactory.decodeStream(is);
 
 								Log.v("got menu item",name+ " " + temp.getString("TruckID"));
-								trucks.get(truckIndex).menu.add(new MenuFoodItem(id,name,price,new BitmapDrawable(bitmapPic)));
+								trucks.get(truckIndex).menu.add(new MenuFoodItem(id,name,price,new BitmapDrawable(bitmapPic),category));
 							}
 
-
-							loadingMenu = false;
+							trucks.get(truckIndex).sortMenu();
+							trucks.get(truckIndex).loadingMenu = false;
 
 						}
 
@@ -231,7 +251,7 @@ public class NomadClientApplication extends Application{
 		querySchedule.setCachePolicy(cachePolicy);
 		querySchedule.whereEqualTo("TruckID",ft.parseID);
 
-		loadingSchedule = true;
+		ft.loadingSchedule = true;
 		querySchedule.findInBackground(new MyFindCallback(truckIndex) {
 			public void done(List<ParseObject> parseData, ParseException e) {
 				final List<ParseObject> pd = parseData;
@@ -254,7 +274,7 @@ public class NomadClientApplication extends Application{
 								trucks.get(truckIndex).schedule.add(new ScheduleEntry(id,dow,time,location));
 								//Log.v("got schedule item",""+time);
 							}
-							loadingSchedule = false;
+							trucks.get(truckIndex).loadingSchedule = false;
 						}
 
 					}, null);
@@ -273,18 +293,18 @@ public class NomadClientApplication extends Application{
 
 
 	}
-	
+
 	public double getDistanceFrom(GeoPoint gp){
 		Location currentLoc = locationListener.getLocation();
-		
-	    double lat = ((double)gp.getLatitudeE6()) / 1e6;
-	    double lng = ((double)gp.getLongitudeE6()) / 1e6;
-	    Location gpLoc = new Location(currentLoc);
-	    gpLoc.setLatitude(lat);
-	    gpLoc.setLongitude(lng);
-	    return currentLoc.distanceTo(gpLoc)/1000 * 0.621371192; //convert from meters to km to miles
+
+		double lat = ((double)gp.getLatitudeE6()) / 1e6;
+		double lng = ((double)gp.getLongitudeE6()) / 1e6;
+		Location gpLoc = new Location(currentLoc);
+		gpLoc.setLatitude(lat);
+		gpLoc.setLongitude(lng);
+		return currentLoc.distanceTo(gpLoc)/1000 * 0.621371192; //convert from meters to km to miles
 	}
-	
+
 
 	private abstract class MyFindCallback extends FindCallback{
 		int truckIndex;
@@ -294,105 +314,105 @@ public class NomadClientApplication extends Application{
 			truckIndex = i;
 		}
 	}
-	
-	
+
+
 	private class MyLocationListener implements LocationListener{
 		Location currentBestLocation;
-		
+
 		public MyLocationListener(){
 			currentBestLocation = locationManager.getLastKnownLocation(locationManager.GPS_PROVIDER);
 			Location l2 = locationManager.getLastKnownLocation(locationManager.NETWORK_PROVIDER);
 			if(isBetterLocation(l2))
-					currentBestLocation = l2;
+				currentBestLocation = l2;
 		}
-		
+
 		public Location getLocation(){
 			return  currentBestLocation;
 		}
-		
+
 		@Override 
 		public void onLocationChanged(Location location){
-			
+
 			if(isBetterLocation(location))
 				currentBestLocation = location;
 		}
 
 		@Override
 		public void onProviderDisabled(String arg0) {
-			
-			
+
+
 		}
 
 		@Override
 		public void onProviderEnabled(String provider) {
-			
-			
+
+
 		}
 
 		@Override
 		public void onStatusChanged(String provider, int status, Bundle extras) {
-			
-			
+
+
 		}
-		
+
 		//taken from example android docs
 		private boolean isBetterLocation(Location location){
-			  if (currentBestLocation == null) {
-			        // A new location is always better than no location
-			        return true;
-			    }
+			if (currentBestLocation == null) {
+				// A new location is always better than no location
+				return true;
+			}
 
-			    // Check whether the new location fix is newer or older
-			    long timeDelta = location.getTime() - currentBestLocation.getTime();
-			    boolean isSignificantlyNewer = timeDelta > 1000*4*60;
-			    boolean isSignificantlyOlder = timeDelta < -1000*4*60;
-			    boolean isNewer = timeDelta > 0;
+			// Check whether the new location fix is newer or older
+			long timeDelta = location.getTime() - currentBestLocation.getTime();
+			boolean isSignificantlyNewer = timeDelta > 1000*4*60;
+			boolean isSignificantlyOlder = timeDelta < -1000*4*60;
+			boolean isNewer = timeDelta > 0;
 
-			    // If it's been more than two minutes since the current location, use the new location
-			    // because the user has likely moved
-			    if (isSignificantlyNewer) {
-			        return true;
-			    // If the new location is more than two minutes older, it must be worse
-			    } else if (isSignificantlyOlder) {
-			        return false;
-			    }
+			// If it's been more than two minutes since the current location, use the new location
+			// because the user has likely moved
+			if (isSignificantlyNewer) {
+				return true;
+				// If the new location is more than two minutes older, it must be worse
+			} else if (isSignificantlyOlder) {
+				return false;
+			}
 
-			    // Check whether the new location fix is more or less accurate
-			    int accuracyDelta = (int) (location.getAccuracy() - currentBestLocation.getAccuracy());
-			    boolean isLessAccurate = accuracyDelta > 0;
-			    boolean isMoreAccurate = accuracyDelta < 0;
-			    boolean isSignificantlyLessAccurate = accuracyDelta > 200;
+			// Check whether the new location fix is more or less accurate
+			int accuracyDelta = (int) (location.getAccuracy() - currentBestLocation.getAccuracy());
+			boolean isLessAccurate = accuracyDelta > 0;
+			boolean isMoreAccurate = accuracyDelta < 0;
+			boolean isSignificantlyLessAccurate = accuracyDelta > 200;
 
-			    // Check if the old and new location are from the same provider
-			    boolean isFromSameProvider = isSameProvider(location.getProvider(),
-			            currentBestLocation.getProvider());
+			// Check if the old and new location are from the same provider
+			boolean isFromSameProvider = isSameProvider(location.getProvider(),
+					currentBestLocation.getProvider());
 
-			    // Determine location quality using a combination of timeliness and accuracy
-			    if (isMoreAccurate) {
-			        return true;
-			    } else if (isNewer && !isLessAccurate) {
-			        return true;
-			    } else if (isNewer && !isSignificantlyLessAccurate && isFromSameProvider) {
-			        return true;
-			    }
-			    return false;
-			 
-			 
-			 
-			 
-			
-			
+			// Determine location quality using a combination of timeliness and accuracy
+			if (isMoreAccurate) {
+				return true;
+			} else if (isNewer && !isLessAccurate) {
+				return true;
+			} else if (isNewer && !isSignificantlyLessAccurate && isFromSameProvider) {
+				return true;
+			}
+			return false;
+
+
+
+
+
+
 		}
-		
+
 		/** Checks whether two providers are the same */
 		private boolean isSameProvider(String provider1, String provider2) {
-		    if (provider1 == null) {
-		      return provider2 == null;
-		    }
-		    return provider1.equals(provider2);
+			if (provider1 == null) {
+				return provider2 == null;
+			}
+			return provider1.equals(provider2);
 		}
-		
-		
+
+
 	}
 
 
