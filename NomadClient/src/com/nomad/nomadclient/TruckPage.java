@@ -1,7 +1,5 @@
 package com.nomad.nomadclient;
 
-import com.parse.Parse;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
@@ -10,8 +8,11 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.parse.Parse;
 
 public class TruckPage extends Activity{
 	Activity thisClass = this;
@@ -39,7 +40,7 @@ public class TruckPage extends Activity{
 		((TextView)findViewById(R.id.titleTextView)).setText(foodTruck.name);
 		((TextView)findViewById(R.id.descriptTextView)).setText(foodTruck.descriptor);
 		((ImageView)findViewById(R.id.truckLogoImageView)).setImageDrawable(foodTruck.logo);
-		((TextView)findViewById(R.id.latestMessageText)).setText(foodTruck.messages.get(0));
+		((TextView)findViewById(R.id.latestMessageText)).setText(foodTruck.messages.get(0).message);
 
 		//begin loading the truck's data in the background, if you need to 
 		if(!foodTruck.hasLoaded)
@@ -107,7 +108,7 @@ public class TruckPage extends Activity{
 		});
 	
 
-		//What to do if they click the schedule "button"////////////////////////
+		//What to do if they click the schedule "button"
 		RelativeLayout scheduleViewButton = (RelativeLayout)findViewById(R.id.scheduleButtonView);
 		scheduleViewButton.setOnClickListener(new View.OnClickListener(){
 			public void onClick(View v) {
@@ -131,7 +132,28 @@ public class TruckPage extends Activity{
 
 			}
 		});
-		///////////////////////////////////////////////////
+		
+		//What to do if they click the messages "button"
+		LinearLayout messageViewButton = (LinearLayout)findViewById(R.id.latestMessageView);
+		messageViewButton.setOnClickListener(new View.OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				Log.v("message button pressed","yes");
+
+				//if things are still loading, show a progress dialog in the meantime
+				if(foodTruck.loadingMessages){
+					Log.v("loading messages not done","yet");
+					BackgroundLoader lwpd = new BackgroundLoader(thisClass,sleepWhileMessagesLoad,openMessages,"Loading","Loading Messages");
+					lwpd.execute();
+				}else{
+					//start the menu class
+					Intent i = new Intent(thisClass, Messages.class);  
+					i.putExtra("truckIndex",truckIndex);
+					startActivity(i); 
+				}
+
+			}
+		});
 
 
 	}
@@ -162,6 +184,19 @@ public class TruckPage extends Activity{
 			}
 		}
 	};
+	
+	Runnable sleepWhileMessagesLoad = new Runnable() {
+		public void run(){
+			while(foodTruck.loadingMessages){
+				try {
+					Thread.sleep(1000);				
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+
+			}
+		}
+	};
 
 	Runnable openMenu = new Runnable() {
 		public void run(){
@@ -176,6 +211,15 @@ public class TruckPage extends Activity{
 		public void run(){
 			//start the menu class
 			Intent i= new Intent(thisClass, Schedule.class);
+			i.putExtra("truckIndex",truckIndex);
+			startActivity(i); 
+		}
+	};
+	
+	Runnable openMessages = new Runnable() {
+		public void run(){
+			//start the menu class
+			Intent i= new Intent(thisClass, Messages.class);
 			i.putExtra("truckIndex",truckIndex);
 			startActivity(i); 
 		}

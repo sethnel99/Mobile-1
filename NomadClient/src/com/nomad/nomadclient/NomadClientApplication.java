@@ -115,7 +115,8 @@ public class NomadClientApplication extends Application{
 				queryFirstMessage.orderByDescending("createdAt");
 
 				ParseObject firstMessage = queryFirstMessage.getFirst();
-				trucks.add(new FoodTruck(parseID, name,locationString,location,description,name,firstMessage.getString("Message"),new BitmapDrawable(bitmapLogo),categories));
+				MessageEntry mse = new MessageEntry(firstMessage.getString("Message"),firstMessage.getCreatedAt());
+				trucks.add(new FoodTruck(parseID, name,locationString,location,description,name,mse,new BitmapDrawable(bitmapLogo),categories));
 
 			}
 
@@ -156,6 +157,7 @@ public class NomadClientApplication extends Application{
 		queryMessages.whereEqualTo("TruckID",ft.parseID);
 		queryMessages.setCachePolicy(cachePolicy);
 		queryMessages.setLimit(10);
+		queryMessages.setSkip(1);
 		ft.loadingMessages = true;
 		queryMessages.findInBackground(new MyFindCallback(truckIndex) {
 			public void done(List<ParseObject> parseData, ParseException e) {
@@ -169,7 +171,8 @@ public class NomadClientApplication extends Application{
 
 							for(int i = 0; i < pd.size(); i++){
 								ParseObject temp = pd.get(i);
-								trucks.get(truckIndex).messages.add(temp.getString("Message"));
+								MessageEntry mse = new MessageEntry(temp.getString("Message"),temp.getCreatedAt());
+								trucks.get(truckIndex).messages.add(mse);
 								Log.v("got message item",temp.getString("Message") + " " + temp.getString("TruckID"));
 							}
 

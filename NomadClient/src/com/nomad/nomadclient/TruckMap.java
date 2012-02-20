@@ -61,8 +61,8 @@ public class TruckMap extends MapActivity {
 		//Grab the truck index (given as an extra) and get the truck
 		Bundle b = this.getIntent().getExtras();
 		int startIndex = -1;
-		if(b.containsKey("truckIndex"))
-		 startIndex = b.getInt("truckIndex");
+		if(b.containsKey("TruckIndex"))
+		 startIndex = b.getInt("TruckIndex");
 
 		
 		 

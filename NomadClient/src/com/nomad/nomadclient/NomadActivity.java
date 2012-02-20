@@ -3,13 +3,13 @@ package com.nomad.nomadclient;
 import java.util.ArrayList;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -22,31 +22,17 @@ public class NomadActivity extends ListActivity{
 	ListView mListView; //The listview displaying the trucks
 	EditText searchBar; //the editbox used to filter the list
 	FoodTruckListAdapter mListAdapter; //the adapter used to populate the listview
-	Activity thisClass = this;
-
+	ListActivity thisClass = this;
 
 
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.trucklist);
+		setContentView(R.layout.splashscreen);
 
 		//initialize view variables
-		mListView = this.getListView();
-		searchBar = (EditText)findViewById(R.id.searchEditText);
 
-
-		//What to do if they click the map button
-		Button mapButton = (Button)findViewById(R.id.mapButton);
-		mapButton.setOnClickListener(new View.OnClickListener(){
-			public void onClick(View v) {
-				//start the map activity
-				Intent i = new Intent(thisClass, TruckMap.class);   
-				i.putExtra("fromPage", TruckMap.FROM_LIST);
-				startActivity(i); 
-			}
-		});
 
 
 		//start up parse
@@ -61,6 +47,13 @@ public class NomadActivity extends ListActivity{
 			public void run(){
 				//get the trucks from the global array
 				ArrayList<FoodTruck> trucks =((NomadClientApplication)thisClass.getApplication()).getTrucks();
+
+				setContentView(R.layout.trucklist);
+				mListView = thisClass.getListView();
+				searchBar = (EditText)findViewById(R.id.searchEditText);
+
+
+				
 				//set up the adapter
 				mListAdapter = new FoodTruckListAdapter(getApplication(), trucks);
 				setListAdapter(mListAdapter);
@@ -74,6 +67,17 @@ public class NomadActivity extends ListActivity{
 						mListAdapter.getFilter().filter(s);
 					}
 				}); 
+				
+				//What to do if they click the map button
+				Button mapButton = (Button)findViewById(R.id.mapButton);
+				mapButton.setOnClickListener(new View.OnClickListener(){
+					public void onClick(View v) {
+						//start the map activity
+						Intent i = new Intent(thisClass, TruckMap.class);   
+						i.putExtra("fromPage", TruckMap.FROM_LIST);
+						startActivity(i); 
+					}
+				});
 
 			}
 		},"Loading","Loading Truck Data");
@@ -82,6 +86,7 @@ public class NomadActivity extends ListActivity{
 
 
 
+		
 
 
 

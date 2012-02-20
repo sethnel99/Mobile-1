@@ -16,7 +16,7 @@ public class FoodTruck {
 	public String searchString; //the search string of the truck
 	public GeoPoint location; //the actual location of the truck
 	public ArrayList<MenuFoodItem> menu; //the trucks menu
-	public ArrayList<String> messages; //the messages/tweets from the truck
+	public ArrayList<MessageEntry> messages; //the messages/tweets from the truck
 	public ArrayList<ScheduleEntry> schedule; //the schedule for the truck
 	public BitmapDrawable logo; //the truc's logo
 	public boolean loadingMessages;
@@ -25,7 +25,7 @@ public class FoodTruck {
 	public ArrayList<String> menuCategories;
 	public boolean hasLoaded;
 	
-	public FoodTruck(String id, String n, String ls, GeoPoint l, String d, String s,String firstMessage, BitmapDrawable pic,ArrayList<String> mc){
+	public FoodTruck(String id, String n, String ls, GeoPoint l, String d, String s,MessageEntry firstMessage, BitmapDrawable pic,ArrayList<String> mc){
 		parseID = id;
 		name = n;
 		locationString = ls;
@@ -33,7 +33,7 @@ public class FoodTruck {
 		descriptor = d;
 		searchString = s;
 		menu = new ArrayList<MenuFoodItem>();
-		messages = new ArrayList<String>();
+		messages = new ArrayList<MessageEntry>();
 		schedule = new ArrayList<ScheduleEntry>();
 		menuCategories = mc;
 		
