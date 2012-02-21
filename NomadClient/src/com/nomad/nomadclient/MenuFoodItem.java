@@ -1,21 +1,27 @@
 package com.nomad.nomadclient;
 
-import android.graphics.drawable.BitmapDrawable;
+import java.io.ByteArrayInputStream;
+
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+
+import com.parse.ParseException;
+import com.parse.ParseFile;
 
 public class MenuFoodItem {
 	public String ParseID;
 	public String name;
 	public double price;
-	public BitmapDrawable itemPicture;
+	private ParseFile imageFile;
+	public Bitmap itemPicture;
 	public int category;
 	public boolean isASectionDivider;
 	
-	public MenuFoodItem(String id, String n, double p, BitmapDrawable pic, int c){
+	public MenuFoodItem(String id, String n, double p, ParseFile pic, int c){
 		ParseID = id; 
 		name = n;
-
 		price = p;
-		itemPicture = pic;
+		imageFile = pic;
 		category = c;
 		isASectionDivider = false;
 	}
@@ -24,5 +30,17 @@ public class MenuFoodItem {
 		name = n;
 		category = c;
 		isASectionDivider = true;
+	}
+	
+	public void decodeImageFile(){
+		ByteArrayInputStream is;
+		try {
+			is = new ByteArrayInputStream(imageFile.getData());
+			itemPicture = BitmapFactory.decodeStream(is);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 }

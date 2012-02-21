@@ -1,26 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content" >
-
-    <ImageView
-        android:id="@+id/foodPic"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_alignParentLeft="true"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="5dp" />
+    android:layout_height="wrap_content"
+    android:paddingTop="5dp"
+    android:paddingBottom="5dp" >
 
     <TextView
         android:id="@+id/menuItemText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_toRightOf="@+id/foodPic"
+        android:layout_alignParentLeft="true"
         android:text="Chicken Empanada"
         android:textColor="#000000"
-        android:textSize="16dp" />
+        android:textSize="24dp" />
 
     <TextView
         android:id="@+id/menuItemPrice"
@@ -29,7 +22,7 @@
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:textColor="#000000"
-        android:textSize="24dp" 
+        android:textSize="20dp" 
         android:layout_marginRight="2dp"/>
 
 </RelativeLayout>

@@ -116,7 +116,7 @@ public class NomadClientApplication extends Application{
 
 				ParseObject firstMessage = queryFirstMessage.getFirst();
 				MessageEntry mse = new MessageEntry(firstMessage.getString("Message"),firstMessage.getCreatedAt());
-				trucks.add(new FoodTruck(parseID, name,locationString,location,description,name,mse,new BitmapDrawable(bitmapLogo),categories));
+				trucks.add(new FoodTruck(parseID, name,locationString,location,description,name,mse,bitmapLogo,categories));
 
 			}
 
@@ -217,24 +217,26 @@ public class NomadClientApplication extends Application{
 								int category = temp.getInt("Category");
 
 								//get logo file, convert logo file into a drawable
-								ParseFile pf;
-								byte[] logoFile = null;
+								ParseFile pf = null;
 								try {
 									pf = (ParseFile)temp.get("ItemPic");
-									logoFile = pf.getData();
 								} catch (ParseException e1) {
 									Log.v("Parse Error",e1.getMessage());
 								}
-								ByteArrayInputStream is = new ByteArrayInputStream(logoFile);
-								Bitmap bitmapPic = BitmapFactory.decodeStream(is);
-
+								
 								Log.v("got menu item",name+ " " + temp.getString("TruckID"));
-								trucks.get(truckIndex).menu.add(new MenuFoodItem(id,name,price,new BitmapDrawable(bitmapPic),category));
+								trucks.get(truckIndex).menu.add(new MenuFoodItem(id,name,price,pf,category));
 							}
+							
+							FoodTruck thisTruck = trucks.get(truckIndex);
 
-							trucks.get(truckIndex).sortMenu();
-							trucks.get(truckIndex).loadingMenu = false;
-
+							thisTruck.sortMenu();
+							thisTruck.loadingMenu = false;
+							
+							for(int i = 0; i < thisTruck.menu.size(); i++){
+								if(!thisTruck.menu.get(i).isASectionDivider && thisTruck.menu.get(i).itemPicture == null)
+									thisTruck.menu.get(i).decodeImageFile();
+							}
 						}
 
 					}, null);

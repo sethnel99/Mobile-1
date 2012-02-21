@@ -2,15 +2,16 @@ package com.nomad.nomadclient;
 
 import java.util.ArrayList;
 
+import android.app.Activity;
 import android.app.ListActivity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -18,7 +19,9 @@ public class Menu extends ListActivity{
 	ListView mListView;	//the listview for the menu items
 	MenuListAdapter mListAdapter; //the adapter for the listview
 	FoodTruck foodTruck; //the truck who's menu is represented
-
+	int truckIndex; 
+	Activity thisClass = this;
+	int menuItemFocused;
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -43,7 +46,7 @@ public class Menu extends ListActivity{
 		mListView = this.getListView();
 
 		//fetch the foodtruck who's menu will be shown
-		int truckIndex = getIntent().getExtras().getInt("truckIndex");
+		truckIndex = getIntent().getExtras().getInt("truckIndex");
 		foodTruck = ((NomadClientApplication)this.getApplication()).getTrucks().get(truckIndex); 
 
 		((TextView)findViewById(R.id.menuPrompt)).setText(foodTruck.name + "'s Menu");
@@ -56,6 +59,17 @@ public class Menu extends ListActivity{
 
 
 
+	}
+	
+	//If any item in the list is clicked
+	@Override
+	protected void onListItemClick(ListView l, View v, int position, long id) {
+		super.onListItemClick(l, v, position, id);
+		menuItemFocused = position;
+		BackgroundLoader lwpd = new BackgroundLoader(thisClass,sleepWhileMenuPicLoads,openMenuItemPage,"Loading","Finishing Loading Item");
+		lwpd.execute();
+		
+		
 	}
 	
 	  private class MenuListAdapter extends ArrayAdapter<MenuFoodItem>{
@@ -89,11 +103,9 @@ public class Menu extends ListActivity{
 	    	            	
 
 	    	                v = inflater.inflate(R.layout.menurow, null);
-	    	                final ImageView foodPicView = (ImageView)v.findViewById(R.id.foodPic);
 	    	                final TextView menuItemText = (TextView)v.findViewById(R.id.menuItemText);
 	    	                final TextView menuItemPrice = (TextView)v.findViewById(R.id.menuItemPrice);
 	    	                	
-	    	                	foodPicView.setBackgroundDrawable(i.itemPicture);
 	    	                	menuItemText.setText(i.name);
 	    	                	menuItemPrice.setText("$"+String.format("%.2f",i.price));
 	    	            }
@@ -127,35 +139,28 @@ public class Menu extends ListActivity{
 
 	    	
 	    }
-/*
-	private class FoodTruckMenuListAdapter extends CustomListAdapter{
-		//passing in a single truck, will create an adapter for information in that single truck based on type 
-		public FoodTruckMenuListAdapter(Context c, FoodTruck ft){
-			super(c);
+	  
+	  Runnable sleepWhileMenuPicLoads = new Runnable() {
+			public void run(){
+				while(foodTruck.menu.get(menuItemFocused).itemPicture == null){
+					try {
+						Thread.sleep(1000);				
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
 
-			//data to pass to super class
-			ArrayList<Object[]> items = new ArrayList<Object[]>();
-
-			int rowID = R.layout.menurow; //layout id of the menu row layout file
-			int[] viewIDs = {R.id.foodPic, R.id.menuItemText, R.id.menuItemPrice}; //the views that will be populated in the row
-			int[] viewTypes = {IMAGEVIEW_BITMAPDRAWABLE, TEXTVIEW, TEXTVIEW}; //the types of those views
-
-			Object[] temp;
-			MenuFoodItem tempmfi; 
-			ArrayList<MenuFoodItem> menu = ft.menu; //fetch the menu
-
-			for(int i = 0; i < menu.size(); i++){ //populate items using the data from menu
-				temp = new Object[3];
-				tempmfi = menu.get(i);
-				temp[0] = tempmfi.itemPicture;
-				temp[1] = tempmfi.name;
-				temp[2] = "$"+String.format("%.2f",tempmfi.price);
-				items.add(temp);
+				}
 			}
+		};
 
-			super.initAdapter(rowID, viewIDs, viewTypes, items);
+		Runnable openMenuItemPage = new Runnable() {
+			public void run(){
+				//start the truck page activity for that truck
+				Intent i = new Intent(thisClass, MenuItemPage.class);
+				i.putExtra("TruckIndex",truckIndex);
+				i.putExtra("MenuItemIndex",menuItemFocused);
+				startActivity(i); 
+			}
+		};
 
-
-		}
-	}*/
 }

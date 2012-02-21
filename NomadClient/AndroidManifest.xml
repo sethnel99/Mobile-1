@@ -46,6 +46,11 @@
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
         </activity>
+        <activity
+            android:name=".MenuItemPage"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+        </activity>
 
         <uses-library android:name="com.google.android.maps" />
     </application>

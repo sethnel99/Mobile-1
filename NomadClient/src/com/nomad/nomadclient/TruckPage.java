@@ -39,7 +39,7 @@ public class TruckPage extends Activity{
 		//Set up the views in this activity with the correct data
 		((TextView)findViewById(R.id.titleTextView)).setText(foodTruck.name);
 		((TextView)findViewById(R.id.descriptTextView)).setText(foodTruck.descriptor);
-		((ImageView)findViewById(R.id.truckLogoImageView)).setImageDrawable(foodTruck.logo);
+		((ImageView)findViewById(R.id.truckLogoImageView)).setImageBitmap(foodTruck.logo);
 		((TextView)findViewById(R.id.latestMessageText)).setText(foodTruck.messages.get(0).message);
 
 		//begin loading the truck's data in the background, if you need to 
@@ -95,7 +95,7 @@ public class TruckPage extends Activity{
 				//if things are still loading, show a progress dialog in the meantime
 				if(foodTruck.loadingMenu){
 					Log.v("loading menu not done","yet");
-					BackgroundLoader lwpd = new BackgroundLoader(thisClass,sleepWhileMenuLoads,openMenu,"Loading","Loading Menu");
+					BackgroundLoader lwpd = new BackgroundLoader(thisClass,sleepWhileMenuLoads,openMenu,"Loading","Finishing Loading Menu");
 					lwpd.execute();
 				}else{
 					//start the menu class
@@ -117,7 +117,7 @@ public class TruckPage extends Activity{
 				//if things are still loading, show a progress dialog in the meantime
 				if(foodTruck.loadingSchedule){
 					Log.v("loading schedule not done","yet");
-					BackgroundLoader lwpd = new BackgroundLoader(thisClass,sleepWhileScheduleLoads,openSchedule,"Loading","Loading Schedule");
+					BackgroundLoader lwpd = new BackgroundLoader(thisClass,sleepWhileScheduleLoads,openSchedule,"Loading","Finishing Loading Schedule");
 					lwpd.execute();
 				}else{
 					//start the menu class
@@ -143,7 +143,7 @@ public class TruckPage extends Activity{
 				//if things are still loading, show a progress dialog in the meantime
 				if(foodTruck.loadingMessages){
 					Log.v("loading messages not done","yet");
-					BackgroundLoader lwpd = new BackgroundLoader(thisClass,sleepWhileMessagesLoad,openMessages,"Loading","Loading Messages");
+					BackgroundLoader lwpd = new BackgroundLoader(thisClass,sleepWhileMessagesLoad,openMessages,"Loading","Finishing Loading Messages");
 					lwpd.execute();
 				}else{
 					//start the menu class

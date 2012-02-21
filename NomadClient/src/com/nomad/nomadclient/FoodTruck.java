@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
+import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 
 import com.google.android.maps.GeoPoint;
@@ -18,14 +19,14 @@ public class FoodTruck {
 	public ArrayList<MenuFoodItem> menu; //the trucks menu
 	public ArrayList<MessageEntry> messages; //the messages/tweets from the truck
 	public ArrayList<ScheduleEntry> schedule; //the schedule for the truck
-	public BitmapDrawable logo; //the truc's logo
+	public Bitmap logo; //the truck's logo
 	public boolean loadingMessages;
 	public boolean loadingMenu;
 	public boolean loadingSchedule;
 	public ArrayList<String> menuCategories;
 	public boolean hasLoaded;
 	
-	public FoodTruck(String id, String n, String ls, GeoPoint l, String d, String s,MessageEntry firstMessage, BitmapDrawable pic,ArrayList<String> mc){
+	public FoodTruck(String id, String n, String ls, GeoPoint l, String d, String s,MessageEntry firstMessage, Bitmap pic,ArrayList<String> mc){
 		parseID = id;
 		name = n;
 		locationString = ls;
