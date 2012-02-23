@@ -32,7 +32,10 @@ public class MenuFoodItem {
 		isASectionDivider = true;
 	}
 	
-	public void decodeImageFile(){
+	public synchronized void decodeImageFile(){
+		if(itemPicture != null)
+			return;
+		
 		ByteArrayInputStream is;
 		try {
 			is = new ByteArrayInputStream(imageFile.getData());

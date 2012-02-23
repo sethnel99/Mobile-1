@@ -29,7 +29,7 @@
             android:layout_width="160dp"
             android:layout_height="60dp"
             android:layout_centerHorizontal="true"
-            android:src="@drawable/templogo" />
+            android:src="@drawable/nomadlogo" />
     </RelativeLayout>
 
     <ScrollView

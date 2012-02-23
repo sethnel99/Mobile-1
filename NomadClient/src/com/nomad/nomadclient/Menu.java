@@ -60,107 +60,109 @@ public class Menu extends ListActivity{
 
 
 	}
-	
+
 	//If any item in the list is clicked
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
 		menuItemFocused = position;
-		BackgroundLoader lwpd = new BackgroundLoader(thisClass,sleepWhileMenuPicLoads,openMenuItemPage,"Loading","Finishing Loading Item");
-		lwpd.execute();
-		
-		
+		if(foodTruck.menu.get(menuItemFocused).itemPicture != null){
+			//start the truck page activity for that truck
+			Intent i = new Intent(thisClass, MenuItemPage.class);
+			i.putExtra("TruckIndex",truckIndex);
+			i.putExtra("MenuItemIndex",menuItemFocused);
+			startActivity(i); 
+		}
+		else{
+			BackgroundLoader lwpd = new BackgroundLoader(thisClass,sleepWhileMenuPicLoads,openMenuItemPage,"Loading","Finishing Loading Item");
+			lwpd.execute();
+		}
+
+
 	}
-	
-	  private class MenuListAdapter extends ArrayAdapter<MenuFoodItem>{
-	    	ArrayList<MenuFoodItem> menu;
-	    	Context c;
-	    	
-	    	public MenuListAdapter(FoodTruck t, Context context){
-	    		super(context,t.menu.size());
-	    		menu = t.menu;
-	    		c = context;
-	    	}
-	    	
-	    	@Override
-	        public View getView(int position, View convertView, ViewGroup parent) {
-	    		
-	    			LayoutInflater inflater = (LayoutInflater) c.getSystemService( Context.LAYOUT_INFLATER_SERVICE );
-	    			View v = convertView;
-	    		   
-	    	        final MenuFoodItem i = menu.get(position);
-	    	        if (i != null) {
-	    	            if(i.isASectionDivider){
-	    	                
-	    	                v = inflater.inflate(R.layout.section_divider, null);
-	    	                v.setOnClickListener(null);
-	    	                v.setOnLongClickListener(null);
-	    	                v.setLongClickable(false);
-	    	 
-	    	                final TextView sectionView = (TextView) v.findViewById(R.id.sectionString);
-	    	                sectionView.setText(i.name);
-	    	            }else{
-	    	            	
 
-	    	                v = inflater.inflate(R.layout.menurow, null);
-	    	                final TextView menuItemText = (TextView)v.findViewById(R.id.menuItemText);
-	    	                final TextView menuItemPrice = (TextView)v.findViewById(R.id.menuItemPrice);
-	    	                	
-	    	                	menuItemText.setText(i.name);
-	    	                	menuItemPrice.setText("$"+String.format("%.2f",i.price));
-	    	            }
-	    	        }
-	    	        return v;
-	    	}
-	    	
-	    	@Override 
-	    	public int getItemViewType(int position){
-	    		if(menu.get(position).isASectionDivider)
-	    			return 1;
-	    		else 
-	    			return 2;
-	    	}
+	private class MenuListAdapter extends ArrayAdapter<MenuFoodItem>{
+		ArrayList<MenuFoodItem> menu;
+		Context c;
 
-	    	@Override
-	    	public int getCount() {
-	    		return menu.size();
-	    	}
+		public MenuListAdapter(FoodTruck t, Context context){
+			super(context,t.menu.size());
+			menu = t.menu;
+			c = context;
+		}
 
-	    	@Override
-	    	public MenuFoodItem getItem(int position) {
-	    		return menu.get(position);
-	    	}
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
 
-	    	@Override
-	    	public long getItemId(int position) {
-	    		return 0;
-	    	}
-	    	
+			LayoutInflater inflater = (LayoutInflater) c.getSystemService( Context.LAYOUT_INFLATER_SERVICE );
+			View v = convertView;
 
-	    	
-	    }
-	  
-	  Runnable sleepWhileMenuPicLoads = new Runnable() {
-			public void run(){
-				while(foodTruck.menu.get(menuItemFocused).itemPicture == null){
-					try {
-						Thread.sleep(1000);				
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
+			final MenuFoodItem i = menu.get(position);
+			if (i != null) {
+				if(i.isASectionDivider){
 
+					v = inflater.inflate(R.layout.section_divider, null);
+					v.setOnClickListener(null);
+					v.setOnLongClickListener(null);
+					v.setLongClickable(false);
+
+					final TextView sectionView = (TextView) v.findViewById(R.id.sectionString);
+					sectionView.setText(i.name);
+				}else{
+
+
+					v = inflater.inflate(R.layout.menurow, null);
+					final TextView menuItemText = (TextView)v.findViewById(R.id.menuItemText);
+					final TextView menuItemPrice = (TextView)v.findViewById(R.id.menuItemPrice);
+
+					menuItemText.setText(i.name);
+					menuItemPrice.setText("$"+String.format("%.2f",i.price));
 				}
 			}
-		};
+			return v;
+		}
 
-		Runnable openMenuItemPage = new Runnable() {
-			public void run(){
-				//start the truck page activity for that truck
-				Intent i = new Intent(thisClass, MenuItemPage.class);
-				i.putExtra("TruckIndex",truckIndex);
-				i.putExtra("MenuItemIndex",menuItemFocused);
-				startActivity(i); 
-			}
-		};
+		@Override 
+		public int getItemViewType(int position){
+			if(menu.get(position).isASectionDivider)
+				return 1;
+			else 
+				return 2;
+		}
+
+		@Override
+		public int getCount() {
+			return menu.size();
+		}
+
+		@Override
+		public MenuFoodItem getItem(int position) {
+			return menu.get(position);
+		}
+
+		@Override
+		public long getItemId(int position) {
+			return 0;
+		}
+
+
+
+	}
+
+	Runnable sleepWhileMenuPicLoads = new Runnable() {
+		public void run(){
+			foodTruck.menu.get(menuItemFocused).decodeImageFile();
+		}
+	};
+
+	Runnable openMenuItemPage = new Runnable() {
+		public void run(){
+			//start the truck page activity for that truck
+			Intent i = new Intent(thisClass, MenuItemPage.class);
+			i.putExtra("TruckIndex",truckIndex);
+			i.putExtra("MenuItemIndex",menuItemFocused);
+			startActivity(i); 
+		}
+	};
 
 }

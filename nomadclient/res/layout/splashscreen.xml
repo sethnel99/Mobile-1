@@ -1,19 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#000000"
-    android:orientation="vertical" >
+    android:layout_height="match_parent" 
+    android:background="@drawable/splash">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-    
-        <ListView
+    <ListView
         android:id="@+id/android:list"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:cacheColorHint="#00000000" >
-    </ListView>
+        android:cacheColorHint="#00000000" />
 
-</LinearLayout>
+
+</FrameLayout>
