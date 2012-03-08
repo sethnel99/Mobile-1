@@ -46,7 +46,35 @@ public class TruckPage extends Activity{
 		if(!foodTruck.hasLoaded)
 			((NomadClientApplication)thisClass.getApplication()).loadTruckLists(truckIndex, NomadClientApplication.NETWORK_FIRST);
 
-
+		
+		//HACKED MOTHER FUCKING REFRESH
+		ImageView logoView = (ImageView)findViewById(R.id.nomadLogoImageView);
+		logoView.setOnClickListener(new View.OnClickListener(){
+			public void onClick(View v){
+				
+				BackgroundLoader lwpd = new BackgroundLoader(thisClass,
+						new Runnable() {
+					public void run(){
+						((NomadClientApplication)thisClass.getApplication()).reloadTruck(truckIndex);
+						foodTruck = ((NomadClientApplication)thisClass.getApplication()).getTrucks().get(truckIndex);
+					}
+				},
+				new Runnable(){
+					public void run(){
+						//Set up the views in this activity with the correct data
+						((TextView)findViewById(R.id.titleTextView)).setText(foodTruck.name);
+						((TextView)findViewById(R.id.descriptTextView)).setText(foodTruck.descriptor);
+						((ImageView)findViewById(R.id.truckLogoImageView)).setImageBitmap(foodTruck.logo);
+						((TextView)findViewById(R.id.latestMessageText)).setText(foodTruck.messages.get(0).message);
+						Log.v("SETH LOOK HERE",foodTruck.messages.get(0).message);
+						((NomadClientApplication)thisClass.getApplication()).loadTruckLists(truckIndex, NomadClientApplication.NETWORK_FIRST);
+					}
+				},"Loading","Reloading Truck Data");
+				lwpd.execute();
+				
+				
+			}
+		});
 
 
 

@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 import org.json.JSONArray;
@@ -52,6 +53,62 @@ public class NomadClientApplication extends Application{
 	public ArrayList<FoodTruck> getTrucks(){
 		return trucks;
 	}
+	
+	public void reloadTruck(int truckIndex){
+		String parseID = trucks.get(truckIndex).parseID;
+		ParseQuery query = new ParseQuery("Trucks");
+		query.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);
+		query.whereEqualTo("objectId", parseID);
+		
+		try {
+			ParseObject temp = query.getFirst();
+			String name = temp.getString("Name");
+			Log.v("new truck from parse",name + " " + parseID);
+			String description = temp.getString("Description");
+			String locationString = temp.getString("LocationString");
+			ParseGeoPoint pgeo = temp.getParseGeoPoint("Location");
+			GeoPoint location;
+			if(pgeo != null)
+				 location = new GeoPoint((int)(pgeo.getLatitude()*Math.pow(10,6)),(int)(pgeo.getLongitude()*Math.pow(10,6)));
+			else
+				 location = null;
+
+			//get logo file, convert logo file into a drawable
+			ParseFile pf = (ParseFile)temp.get("Logo");
+			byte[] logoFile = pf.getData();
+			ByteArrayInputStream is = new ByteArrayInputStream(logoFile);
+			Bitmap bitmapLogo = BitmapFactory.decodeStream(is);
+
+			JSONArray categoriesJSON = temp.getJSONArray("MenuCategories");
+			//turn the categories JSONArray into an ArrayList
+			ArrayList<String> categories = new ArrayList<String>();     
+			int len = categoriesJSON.length();
+			for (int j=0;j<len;j++){ 
+				try {
+					categories.add(categoriesJSON.get(j).toString());
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+
+
+			//grab the first message for each truck as well, so save load time later
+			ParseQuery queryFirstMessage = new ParseQuery("Messages");
+			queryFirstMessage.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);
+			queryFirstMessage.whereEqualTo("TruckID",parseID);
+			queryFirstMessage.orderByDescending("createdAt");
+
+			ParseObject firstMessage = queryFirstMessage.getFirst();
+			MessageEntry mse = new MessageEntry(firstMessage.getString("Message"),firstMessage.getCreatedAt());
+			trucks.set(truckIndex,new FoodTruck(parseID, name,locationString,location,description,name,mse,bitmapLogo,categories));
+
+
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 
 	//pulls down all truck data from Parse
 	public void loadTrucksFromParse(int loadType){
@@ -86,8 +143,12 @@ public class NomadClientApplication extends Application{
 				String description = temp.getString("Description");
 				String locationString = temp.getString("LocationString");
 				ParseGeoPoint pgeo = temp.getParseGeoPoint("Location");
-				GeoPoint location = new GeoPoint((int)(pgeo.getLatitude()*Math.pow(10,6)),(int)(pgeo.getLongitude()*Math.pow(10,6)));
-
+				GeoPoint location;
+				if(pgeo != null)
+					 location = new GeoPoint((int)(pgeo.getLatitude()*Math.pow(10,6)),(int)(pgeo.getLongitude()*Math.pow(10,6)));
+				else
+					 location = null;
+				
 				//get logo file, convert logo file into a drawable
 				ParseFile pf = (ParseFile)temp.get("Logo");
 				byte[] logoFile = pf.getData();
@@ -115,7 +176,11 @@ public class NomadClientApplication extends Application{
 				queryFirstMessage.orderByDescending("createdAt");
 
 				ParseObject firstMessage = queryFirstMessage.getFirst();
-				MessageEntry mse = new MessageEntry(firstMessage.getString("Message"),firstMessage.getCreatedAt());
+				MessageEntry mse;
+				if(firstMessage == null)
+					mse = new MessageEntry("No recent messages", new Date());
+				else
+					mse = new MessageEntry(firstMessage.getString("Message"),firstMessage.getCreatedAt());
 				trucks.add(new FoodTruck(parseID, name,locationString,location,description,name,mse,bitmapLogo,categories));
 
 			}
@@ -123,6 +188,8 @@ public class NomadClientApplication extends Application{
 
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalArgumentException e){
 			e.printStackTrace();
 		}
 		Log.v("PARSE IS ENDING","parse!");
@@ -156,6 +223,7 @@ public class NomadClientApplication extends Application{
 		ParseQuery queryMessages = new ParseQuery("Messages");
 		queryMessages.whereEqualTo("TruckID",ft.parseID);
 		queryMessages.setCachePolicy(cachePolicy);
+		queryMessages.orderByDescending("createdAt");
 		queryMessages.setLimit(10);
 		queryMessages.setSkip(1);
 		ft.loadingMessages = true;
@@ -168,7 +236,7 @@ public class NomadClientApplication extends Application{
 					//Parse the menu data in the background, so that we don't lock up the UI thread
 					BackgroundLoader lwpd = new BackgroundLoader(new Runnable(){
 						public void run(){
-
+						//	Log.v("size of messages returned",""+pd.size());
 							for(int i = 0; i < pd.size(); i++){
 								ParseObject temp = pd.get(i);
 								MessageEntry mse = new MessageEntry(temp.getString("Message"),temp.getCreatedAt());
@@ -177,6 +245,7 @@ public class NomadClientApplication extends Application{
 							}
 
 							trucks.get(truckIndex).loadingMessages = false;
+							
 
 						}
 
@@ -300,6 +369,8 @@ public class NomadClientApplication extends Application{
 	}
 
 	public double getDistanceFrom(GeoPoint gp){
+		if(gp == null)
+			return Integer.MAX_VALUE;
 		Location currentLoc = locationListener.getLocation();
 
 		double lat = ((double)gp.getLatitudeE6()) / 1e6;

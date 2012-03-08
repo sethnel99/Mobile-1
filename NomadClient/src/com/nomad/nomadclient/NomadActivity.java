@@ -129,6 +129,8 @@ public class NomadActivity extends ListActivity{
 				double dist = ((NomadClientApplication)c).getDistanceFrom(tempft.location);
 				if(dist < 100) //to make sure the distance isn't too long to display in its alloted space
 					temp[0] = String.format("%.1f",dist);
+				else if(dist == Integer.MAX_VALUE)
+					temp[0] = "-";
 				else
 					temp[0] = ">100";
 				temp[1] = tempft.name;

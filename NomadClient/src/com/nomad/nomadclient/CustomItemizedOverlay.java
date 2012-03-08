@@ -27,9 +27,9 @@ import com.google.android.maps.OverlayItem;
 import com.readystatesoftware.mapviewballoons.BalloonItemizedOverlay;
 import com.readystatesoftware.mapviewballoons.BalloonOverlayView;
 
-public class CustomItemizedOverlay<Item extends OverlayItem> extends BalloonItemizedOverlay<OverlayItem> {
+public class CustomItemizedOverlay<Item extends CustomOverlayItem> extends BalloonItemizedOverlay<CustomOverlayItem> {
 
-	private ArrayList<OverlayItem> m_overlays = new ArrayList<OverlayItem>();
+	private ArrayList<CustomOverlayItem> m_overlays = new ArrayList<CustomOverlayItem>();
 	private Context c;
 	
 	public CustomItemizedOverlay(Drawable defaultMarker, MapView mapView) {
@@ -37,13 +37,13 @@ public class CustomItemizedOverlay<Item extends OverlayItem> extends BalloonItem
 		c = mapView.getContext();
 	}
 
-	public void addOverlay(OverlayItem overlay) {
+	public void addOverlay(CustomOverlayItem overlay) {
 	    m_overlays.add(overlay);
 	    populate();
 	}
 
 	@Override
-	protected OverlayItem createItem(int i) {
+	protected CustomOverlayItem createItem(int i) {
 		return m_overlays.get(i);
 	}
 
@@ -53,17 +53,17 @@ public class CustomItemizedOverlay<Item extends OverlayItem> extends BalloonItem
 	}
 
 	@Override
-	protected boolean onBalloonTap(int index, OverlayItem item) {
+	protected boolean onBalloonTap(int index, CustomOverlayItem item) {
 		Intent i = new Intent(c,TruckPage.class);
-		i.putExtra("truckIndex",index);
+		i.putExtra("truckIndex",item.index);
 		c.startActivity(i);
 		return true;
 	}
 
 	@Override
-	protected BalloonOverlayView<OverlayItem> createBalloonOverlayView() {
+	protected BalloonOverlayView<CustomOverlayItem> createBalloonOverlayView() {
 		// use our custom balloon view with our custom overlay item type:
-		return new CustomBalloonOverlayView<OverlayItem>(getMapView().getContext(), getBalloonBottomOffset());
+		return new CustomBalloonOverlayView<CustomOverlayItem>(getMapView().getContext(), getBalloonBottomOffset());
 	}
 
 }

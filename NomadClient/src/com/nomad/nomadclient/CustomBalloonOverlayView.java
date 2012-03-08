@@ -26,7 +26,7 @@ import android.widget.TextView;
 import com.google.android.maps.OverlayItem;
 import com.readystatesoftware.mapviewballoons.BalloonOverlayView;
 
-public class CustomBalloonOverlayView<Item extends OverlayItem> extends BalloonOverlayView<OverlayItem> {
+public class CustomBalloonOverlayView<Item extends CustomOverlayItem> extends BalloonOverlayView<CustomOverlayItem> {
 
 	private TextView title;
 	private TextView snippet;
@@ -47,7 +47,6 @@ public class CustomBalloonOverlayView<Item extends OverlayItem> extends BalloonO
 		// setup our fields
 		title = (TextView) v.findViewById(R.id.balloon_item_title);
 		snippet = (TextView) v.findViewById(R.id.balloon_item_snippet);
-
 		
 		// implement balloon close
 		ImageView close = (ImageView) v.findViewById(R.id.balloon_close);
@@ -61,12 +60,12 @@ public class CustomBalloonOverlayView<Item extends OverlayItem> extends BalloonO
 	}
 
 	@Override
-	protected void setBalloonData(OverlayItem item, ViewGroup parent) {	
+	protected void setBalloonData(CustomOverlayItem item, ViewGroup parent) {	
 		// map our custom item data to fields
 		title.setText(item.getTitle());
 		snippet.setText(item.getSnippet());
 	
 	}
-
+	
 	
 }
