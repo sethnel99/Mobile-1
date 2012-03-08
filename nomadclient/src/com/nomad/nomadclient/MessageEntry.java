@@ -18,7 +18,7 @@ public class MessageEntry {
 		}
 			
 		
-		timeCreated = String.format("%02d/%02d/%02d %02d:%02d"+ampm,t.getMonth()+1,t.getDay()+1,t.getYear()+1900,hour,t.getMinutes());
+		timeCreated = String.format("%02d/%02d/%02d %02d:%02d"+ampm,t.getMonth()+1,t.getDate(),t.getYear()+1900,hour,t.getMinutes());
 		//timeCreated = t.getMonth()+"/"+t.getDay()+"/"+t.getYear()+" " + String.format("%02d",t.getHours()) + ":" + t.getMinutes();
 	}
 }

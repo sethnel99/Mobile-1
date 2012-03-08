@@ -82,7 +82,8 @@ public class Messages extends ListActivity{
 			final TextView dateTextView = (TextView)v.findViewById(R.id.messageRowTime);
 			final TextView messageTextView = (TextView)v.findViewById(R.id.messageRowMessage);
 
-
+			Log.v("MESSAGE GETVIEW",i.message + " " + i);
+			
 			dateTextView.setText(i.timeCreated);
 			messageTextView.setText(i.message);
 
